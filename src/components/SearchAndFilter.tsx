@@ -1,7 +1,7 @@
 "use client"
 
 import { LotionDto } from '@/types/Lotion';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import LotionCard from './LotionCard'; // Importamos el componente LotionCard
 import FilterBar from './FilterBar'; // Importamos el FilterBar
 
@@ -14,29 +14,27 @@ const SearchAndFilterBar = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState(1);
 
-    const fetchLotions = async () => {
+    const fetchLotions = useCallback(async () => {
         setLoading(true);
         try {
             let url = '';
 
             if (searchQuery.trim() === '') {
-                // Si no hay búsqueda, usamos el endpoint GET para obtener todas las lociones
-                url = `http://localhost:3000/admin/all_lotions?page=${page}`;
+                url = 'http://localhost:3000/admin/all_lotions?page=${page}';
             } else {
-                // Si hay búsqueda, usamos el endpoint POST para filtrar por nombre
                 url = 'http://localhost:3000/admin/search_lotion';
             }
 
             const response = await fetch(url, {
-                method: searchQuery.trim() === '' ? 'GET' : 'POST', // Cambiar método según si es GET o POST
+                method: searchQuery.trim() === '' ? 'GET' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: searchQuery.trim() !== '' ? JSON.stringify({
                     name: searchQuery,
                     page,
-                    priceOrder: 'asc', // Puedes cambiar este orden si lo deseas
-                }) : undefined, // Solo enviar cuerpo si es un POST
+                    priceOrder: 'asc',
+                }) : undefined,
             });
 
             const data = await response.json();
@@ -44,28 +42,26 @@ const SearchAndFilterBar = () => {
             if (data.success) {
                 setLotions(data.data);
 
-                // Ahora usamos totalPages que viene desde el backend
                 if (data.pagination) {
                     setTotalPages(data.pagination.totalPages);
                 } else {
-                    setTotalPages(1); // Si no hay paginación, asignar 1 página
+                    setTotalPages(1);
                 }
             } else {
                 setLotions([]);
-                setTotalPages(1); // Establecer una página por defecto si no hay datos
+                setTotalPages(1);
             }
         } catch (error) {
             console.error('Error fetching lotions:', error);
             setLotions([]);
-            setTotalPages(1); // Establecer una página por defecto si ocurre un error
+            setTotalPages(1);
         }
         setLoading(false);
-    };
-
+    }, [searchQuery, page]);
 
     useEffect(() => {
         fetchLotions();
-    }, [page, searchQuery]); // Dependemos de `page` y `searchQuery`
+    }, [fetchLotions]); // Dependemos de `page` y `searchQuery`
 
     const handleNextPage = () => {
         if (page < totalPages) setPage(page + 1);

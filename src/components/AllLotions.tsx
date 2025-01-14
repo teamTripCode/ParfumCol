@@ -14,7 +14,9 @@ function CatalogPreview() {
                 const images = response.data.data;
                 setLotionImages(images)
             } catch (error) {
-
+                if (error instanceof Error) {
+                    console.log(error.message)
+                }
             }
         }
 
