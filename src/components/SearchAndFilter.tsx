@@ -1,6 +1,7 @@
+"use client"
+
 import { LotionDto } from '@/types/Lotion';
 import React, { useState, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa';
 import LotionCard from './LotionCard'; // Importamos el componente LotionCard
 import FilterBar from './FilterBar'; // Importamos el FilterBar
 

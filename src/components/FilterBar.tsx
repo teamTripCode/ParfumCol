@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaSearch, FaChevronDown, FaTh, FaList } from 'react-icons/fa';
 
 const FilterBar = ({

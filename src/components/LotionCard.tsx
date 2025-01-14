@@ -1,5 +1,6 @@
 import React from 'react';
 import { LotionDto } from '@/types/Lotion';
+import Image from 'next/image';
 
 interface LotionCardProps {
     lotion: LotionDto;
@@ -10,7 +11,9 @@ const LotionCard = ({ lotion }: LotionCardProps) => {
         <div className="max-w-xs">
             <div className="bg-white rounded-lg overflow-hidden">
                 <div className="relative pb-4">
-                    <img
+                    <Image
+                        width={500}
+                        height={500}
                         src={lotion.images[0]}
                         alt={lotion.name}
                         className="w-full h-64 object-contain bg-sky-50"
