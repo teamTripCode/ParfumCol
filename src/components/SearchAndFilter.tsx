@@ -20,9 +20,9 @@ const SearchAndFilterBar = () => {
             let url = '';
 
             if (searchQuery.trim() === '') {
-                url = 'http://localhost:3000/admin/all_lotions?page=${page}';
+                url = `${process.env.ENDPOINT_BACKEND}/admin/all_lotions?page=${page}`;
             } else {
-                url = 'http://localhost:3000/admin/search_lotion';
+                url = `${process.env.ENDPOINT_BACKEND}/admin/search_lotion`;
             }
 
             const response = await fetch(url, {

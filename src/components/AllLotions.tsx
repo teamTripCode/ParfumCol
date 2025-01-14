@@ -9,7 +9,7 @@ function CatalogPreview() {
     useEffect(() => {
         const GetImages = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/admin/random_covers`)
+                const response = await axios.get(`${process.env.ENDPOINT_BACKEND}/admin/random_covers`)
                 if (response.data.success == false) throw new Error(response.data.error);
                 const images = response.data.data;
                 setLotionImages(images)
@@ -22,6 +22,7 @@ function CatalogPreview() {
 
         GetImages()
     }, [])
+
     return (
         <>
             <div>
