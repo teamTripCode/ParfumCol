@@ -6,7 +6,15 @@ import {
     BsCheckCircle
 } from 'react-icons/bs';
 
-const DeliveryStep = ({ number, title, description, status, Icon }) => (
+interface DeliveryStepProps {
+    number: number;
+    title: string;
+    description: string;
+    status: string;
+    Icon: React.ComponentType<{ className?: string }>;
+}
+
+const DeliveryStep = ({ number, title, description, status, Icon }: DeliveryStepProps) => (
     <div className="p-6 bg-white shadow-lg rounded-lg relative">
         <span className="absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-black text-white rounded-full">
             {number}
