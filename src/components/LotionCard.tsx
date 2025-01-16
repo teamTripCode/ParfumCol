@@ -1,12 +1,16 @@
 import React from 'react';
 import { LotionDto } from '@/types/Lotion';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { formatToCOP } from '@/handlers/FormatToCop';
 
 interface LotionCardProps {
     lotion: LotionDto;
 }
 
 const LotionCard = ({ lotion }: LotionCardProps) => {
+    const router = useRouter();
+
     return (
         <div className="max-w-xs">
             <div className="bg-white rounded-lg overflow-hidden">
@@ -34,8 +38,8 @@ const LotionCard = ({ lotion }: LotionCardProps) => {
                     </p>
 
                     <div className="flex items-center justify-between">
-                        <span className="text-lg">€{lotion.price}</span>
-                        <button className="text-orange-600 hover:text-orange-700 text-sm">
+                        <span className="text-lg">{formatToCOP(lotion.price)}</span>
+                        <button className="text-orange-600 hover:text-orange-700 text-sm" onClick={() => router.push(`lotion/${lotion.id}`)}>
                             Ver Detalles
                         </button>
                     </div>
