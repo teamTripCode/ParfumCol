@@ -4,6 +4,7 @@ import { LotionDto } from "@/types/Lotion";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import LotionCard from "./LotionCard";
 import FilterBar from "./FilterBar";
+import { TbLoader } from "react-icons/tb";
 
 const SearchAndFilterBar = () => {
     const [viewMode, setViewMode] = useState("grid");
@@ -158,9 +159,14 @@ const SearchAndFilterBar = () => {
                 setSortOpen={setSortOpen}
             />
 
-            <div className="mt-8 w-full">
+            <div className="mt-8 w-full grid place-content-center min-h-dvh">
                 {loading ? (
-                    <p>Cargando...</p>
+                    <div className="flex flex-row gap-2">
+                        <div className="grid place-content-center">
+                            <TbLoader className="animate-rotate text-gray-600" />
+                        </div>
+                        <p className="font-semibold text-gray-600">Cargando</p>
+                    </div>
                 ) : (
                     <div
                         className={
