@@ -6,7 +6,6 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import NavBar from "./NavBar"
 import { formatToCOP } from "@/handlers/FormatToCop"
-import Footer from "./footer"
 
 function LotionInfo({ lotionId }: { lotionId: string }) {
     const [infoLotion, setInfoLotion] = useState<LotionDto | null>(null);
