@@ -6,12 +6,16 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import NavBar from "./NavBar"
 import { formatToCOP } from "@/handlers/FormatToCop"
+import { useRouter } from "next/navigation"
+import { TbArrowLeft } from "react-icons/tb"
 
 function LotionInfo({ lotionId }: { lotionId: string }) {
     const [infoLotion, setInfoLotion] = useState<LotionDto | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState<number>(1)
+
+    const router = useRouter()
 
     const countCart = ({ isAdd, isReduce }: { isAdd?: boolean, isReduce?: boolean }) => {
         if (isAdd) setCount(count + 1);
@@ -80,8 +84,17 @@ function LotionInfo({ lotionId }: { lotionId: string }) {
 
     return (
         <>
-            <NavBar />
-            <div className="flex flex-wrap w-[90%] ml-[5%] min-h-dvh pt-32 gap-12 md:gap-2 mb-10">
+            <div className="pt-32 w-[90%] ml-[5%] mb-10 flex justify-start">
+                <div className="grid place-content-center" onClick={() => router.push('/catalogo')}>
+                    <div className="flex flex-row gap-1 bg-gray-200 px-2 py-1 rounded-md text-gray-600 cursor-pointer hover:bg-gray-300">
+                        <div className="grid place-content-center">
+                            <TbArrowLeft />
+                        </div>
+                        <p>Atras</p>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-wrap w-[90%] ml-[5%] min-h-dvh gap-12 md:gap-2 mb-10">
                 <div className="flex basis-[400px] grow">
                     {infoLotion.images && infoLotion.images.length > 0 ? (
                         <ImageCarouselLotion imageUrls={infoLotion.images} />

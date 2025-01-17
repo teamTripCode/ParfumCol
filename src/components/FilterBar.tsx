@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaSearch, FaChevronDown, FaTh, FaList } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaSearch, FaChevronDown, FaFilter } from 'react-icons/fa';
 
 const FilterBar = ({
     searchQuery,
@@ -7,7 +7,7 @@ const FilterBar = ({
     viewMode,
     setViewMode,
     sortOpen,
-    setSortOpen
+    setSortOpen,
 }: {
     searchQuery: string;
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -16,11 +16,42 @@ const FilterBar = ({
     sortOpen: boolean;
     setSortOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+    const [isFilterVisible, setFilterVisible] = useState(false);
+
+    // Forzar vista en lista en móviles
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setViewMode('list'); // Forzar vista en lista
+            }
+        };
+
+        handleResize(); // Asegurarse de aplicar en el primer render
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, [setViewMode]);
+
     return (
         <div className="w-full border-b border-gray-200 pt-10">
             <div className="max-w-7xl mx-auto px-4 py-4">
-                <div className="flex items-center justify-between space-x-8">
-                    {/* Search Bar */}
+                {/* Botón de filtro para móviles */}
+                <div className="flex items-center justify-between md:hidden">
+                    <button
+                        onClick={() => setFilterVisible(!isFilterVisible)}
+                        className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900"
+                    >
+                        <FaFilter className="w-5 h-5" />
+                        <span>Filtros</span>
+                    </button>
+                </div>
+
+                {/* Contenido del filtro */}
+                <div
+                    className={`${isFilterVisible ? 'block' : 'hidden'
+                        } mt-4 md:flex md:items-center md:justify-between md:space-x-8`}
+                >
+                    {/* Barra de búsqueda */}
                     <div className="flex items-center flex-1 max-w-md">
                         <FaSearch className="w-4 h-4 text-gray-400" />
                         <input
@@ -32,9 +63,9 @@ const FilterBar = ({
                         />
                     </div>
 
-                    {/* Filters */}
-                    <div className="flex items-center space-x-6">
-                        {/* Sort Dropdown */}
+                    {/* Opciones de filtro */}
+                    <div className="flex items-center space-x-6 mt-4 md:mt-0">
+                        {/* Ordenar */}
                         <div className="relative">
                             <button
                                 onClick={() => setSortOpen(!sortOpen)}
@@ -62,36 +93,15 @@ const FilterBar = ({
                             )}
                         </div>
 
-                        {/* Genre Filters */}
-                        <button className="text-sm text-gray-600 hover:text-gray-900">
-                            Masculino
-                        </button>
-                        <button className="text-sm text-gray-600 hover:text-gray-900">
-                            Femenino
-                        </button>
-                        <button className="text-sm text-gray-600 hover:text-gray-900">
-                            Unisex
-                        </button>
+                        {/* Filtros adicionales */}
+                        <button className="text-sm text-gray-600 hover:text-gray-900">Masculino</button>
+                        <button className="text-sm text-gray-600 hover:text-gray-900">Femenino</button>
+                        <button className="text-sm text-gray-600 hover:text-gray-900">Unisex</button>
+                        <button className="text-sm text-gray-600 hover:text-gray-900">Solo disponibles</button>
 
-                        {/* Availability Filter */}
-                        <button className="text-sm text-gray-600 hover:text-gray-900">
-                            Solo disponibles
-                        </button>
-
-                        {/* View Toggle */}
-                        <div className="flex items-center space-x-2 border-l border-gray-200 pl-6">
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-1 rounded ${viewMode === 'grid' ? 'text-gray-900' : 'text-gray-400'}`}
-                            >
-                                <FaTh className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-1 rounded ${viewMode === 'list' ? 'text-gray-900' : 'text-gray-400'}`}
-                            >
-                                <FaList className="w-5 h-5" />
-                            </button>
+                        {/* Alternar vista (solo en escritorio) */}
+                        <div className="hidden md:flex items-center space-x-2 border-l border-gray-200 pl-6">
+                            {/* Estos botones ya no se muestran en móvil */}
                         </div>
                     </div>
                 </div>

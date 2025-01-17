@@ -19,12 +19,13 @@ function NavBar() {
 
             {/* Center Section */}
             <div className='grid place-content-center'>
-                <h3 className="text-xl font-bold text-gray-700">PARFUM COLOMBIA</h3>
+                <h3 onClick={() => router.push('/')} className="cursor-pointer text-xl font-bold text-gray-700">PARFUM COLOMBIA</h3>
             </div>
 
             {/* Right Section */}
             <div className="flex flex-row items-center gap-4">
                 {/* Search Icon and Input */}
+
                 <div className="relative">
                     <div
                         className="grid place-content-center cursor-pointer"
@@ -32,14 +33,8 @@ function NavBar() {
                     >
                         <IconSearch className="text-gray-700" />
                     </div>
-                    {isSearchOpen && (
-                        <input
-                            type="text"
-                            placeholder="Buscar..."
-                            className="absolute top-full mt-7 right-0 left-[-200] md:left-[-170px] w-80 p-2 border border-gray-300 rounded-md shadow-md transition-all duration-300"
-                        />
-                    )}
                 </div>
+
 
                 {/* Briefcase Icon */}
                 <div className="grid place-content-center">
@@ -56,7 +51,7 @@ function NavBar() {
             {isMenuOpen && (
                 <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden">
                     <ul className="flex flex-col items-center gap-4 py-4">
-                        <a className="cursor-pointer" >Catálogo</a>
+                        <a className="cursor-pointer" onClick={() => router.push('/catalogo')}>Catálogo</a>
                         <li className="cursor-pointer">Contacto</li>
                     </ul>
                 </div>

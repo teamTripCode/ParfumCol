@@ -61,7 +61,7 @@ const BlockchainDeliverySection = () => {
     ];
 
     return (
-        <div className='min-h-dvh grid place-content-center'>
+        <div className='min-h-dvh grid place-content-center w-[90%] ml-[5%]'>
             <div className="max-w-6xl mx-auto px-4 py-16 md:mt-0 mt-9">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-serif mb-4">
