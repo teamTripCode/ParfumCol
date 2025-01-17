@@ -4,7 +4,6 @@ import { FaSearch, FaChevronDown, FaFilter } from 'react-icons/fa';
 const FilterBar = ({
     searchQuery,
     setSearchQuery,
-    viewMode,
     setViewMode,
     sortOpen,
     setSortOpen,

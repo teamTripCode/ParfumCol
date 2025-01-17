@@ -3,7 +3,6 @@
 
 import LotionInfo from '@/components/LotionInfo';
 import NavBar from '@/components/NavBar';
-import { useRouter } from 'next/navigation';
 import { use } from 'react';
 
 function InfoLotion({ params }: { params: Promise<{ lotionId: string }> }) {
