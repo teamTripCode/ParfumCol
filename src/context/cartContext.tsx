@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { AccountDto } from '@/types/account';
-import { useRouter } from 'next/navigation';
 import { getStoredUser } from "../utils/token";
 
 interface CartContextType {
@@ -17,7 +16,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [cartItemsCount, setCartItemsCount] = useState(0);
     const [user, setUser] = useState<AccountDto | null>(null);
-    const router = useRouter();
 
     const apiEndpoint = process.env.NEXT_PUBLIC_ENDPOINT_BACKEND;
 

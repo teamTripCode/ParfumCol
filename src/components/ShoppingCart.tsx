@@ -1,5 +1,6 @@
 "use client"
 
+import Image from 'next/image';
 import React from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
 
@@ -58,7 +59,9 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                     {cartItems.map((item) => (
                         <div key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow">
                             <div className="h-24 w-24 flex-shrink-0">
-                                <img
+                                <Image
+                                    width={500}
+                                    height={500}
                                     src={item.lotion.images?.[0] || "/api/placeholder/96/96"}
                                     alt={item.lotion.name}
                                     className="h-full w-full object-cover rounded-md"

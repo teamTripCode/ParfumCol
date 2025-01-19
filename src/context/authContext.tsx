@@ -26,6 +26,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const apiEndpoint = process.env.NEXT_PUBLIC_ENDPOINT_BACKEND;
 
+    const logout = useCallback(() => {
+        removeToken();
+        setUser(null);
+        router.push('/auth');
+    }, [router]);
+
     const handleSuccessfulAuth = async (token: string, userData: AccountDto) => {
         try {
             storeToken(token);
@@ -73,7 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error("Error refreshing user:", error);
             logout();
         }
-    }, [apiEndpoint]);
+    }, [apiEndpoint, logout]);
+
 
     const register = async (userData: AccountDto) => {
         try {
@@ -106,12 +113,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             throw error;
         }
     };
-
-    const logout = useCallback(() => {
-        removeToken();
-        setUser(null);
-        router.push('/auth');
-    }, [router]);
 
     const updateProfile = async (data: Partial<AccountDto>) => {
         try {

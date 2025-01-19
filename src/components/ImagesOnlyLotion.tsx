@@ -1,5 +1,6 @@
 'use client'
 
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
 interface ImageCarouselProps {
@@ -29,7 +30,9 @@ const ImageCarouselLotion: React.FC<ImageCarouselProps> = ({ imageUrls }) => {
         <div className="flex flex-col items-center gap-4">
             {/* Imagen grande */}
             <div className="w-full max-w-lg">
-                <img
+                <Image
+                    width={500}
+                    height={500}
                     src={selectedImage}
                     alt="Selected"
                     className="w-full h-auto object-cover rounded-lg shadow-md"
@@ -41,14 +44,15 @@ const ImageCarouselLotion: React.FC<ImageCarouselProps> = ({ imageUrls }) => {
                 {imageUrls.map((url, index) => (
                     <button
                         key={index}
-                        className={`flex-none w-24 h-24 rounded-lg border-2 ${
-                            selectedImage === url
-                                ? "border-blue-500"
-                                : "border-transparent hover:border-gray-300"
-                        }`}
+                        className={`flex-none w-24 h-24 rounded-lg border-2 ${selectedImage === url
+                            ? "border-blue-500"
+                            : "border-transparent hover:border-gray-300"
+                            }`}
                         onClick={() => setSelectedImage(url)}
                     >
-                        <img
+                        <Image
+                            width={500}
+                            height={500}
                             src={url}
                             alt={`Thumbnail ${index}`}
                             className="w-full h-full object-cover rounded-lg"

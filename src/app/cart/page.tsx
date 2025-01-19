@@ -21,13 +21,13 @@ function Cart() {
 
     useEffect(() => {
         const getDataCart = async () => {
-            let cartId: string = "";
+            const cartId: string = "";  // Cambié 'let' por 'const'
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/accounts/cart/${cartId}`)
                 console.log(response.data.data)
                 setItems(response.data.data)
             } catch (error) {
-
+                console.error("Error fetching cart data", error); // Usé el parámetro error para mostrar un mensaje de error
             }
         }
 

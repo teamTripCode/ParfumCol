@@ -34,7 +34,7 @@ export interface Cart {
 
 export interface CartItem {
     id?: string
-    cartId: String
+    cartId: string
     cart?: Cart
     lotionId: string
     lotion?: LotionDto
