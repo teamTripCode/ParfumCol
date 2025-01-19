@@ -9,15 +9,23 @@ import { useEffect, useState } from "react"
 function Cart() {
     const [items, setItems] = useState<OrderItem[] | null>(null)
 
-    const handleUpdateQuantity = (itemId: string, newQuantity: number) => { }
-    const handleRemoveItem = (itemId: string) => { }
+    const handleUpdateQuantity = (itemId: string, newQuantity: number) => {
+        console.log(itemId, newQuantity)
+        return;
+    }
+
+    const handleRemoveItem = (itemId: string) => {
+        console.log(itemId);
+        return;
+    }
 
     useEffect(() => {
         const getDataCart = async () => {
             let cartId: string = "";
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/accounts/cart/${cartId}`)
-                console.log(response)
+                console.log(response.data.data)
+                setItems(response.data.data)
             } catch (error) {
 
             }

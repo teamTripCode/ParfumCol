@@ -13,9 +13,9 @@ export interface OrderDto {
 
 export interface OrderItem {
     id: string
-    orderId: String
+    orderId: string
     order: OrderDto
-    lotionId: String
+    lotionId: string
     lotion: LotionDto
     quantity: number
     price: number
@@ -23,8 +23,8 @@ export interface OrderItem {
 }
 
 export interface Cart {
-    id?: String
-    accountId: String
+    id?: string
+    accountId: string
     account?: AccountDto
     items: CartItem[]
     totalAmount: number
@@ -33,10 +33,10 @@ export interface Cart {
 }
 
 export interface CartItem {
-    id?: String
+    id?: string
     cartId: String
     cart?: Cart
-    lotionId: String
+    lotionId: string
     lotion?: LotionDto
     quantity: number
     price: number

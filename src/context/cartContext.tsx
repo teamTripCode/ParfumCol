@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { AccountDto } from '@/types/account';
 import { useRouter } from 'next/navigation';
-import { getStoredToken, storeToken, removeToken, storeUser, getStoredUser } from "../utils/token";
+import { getStoredUser } from "../utils/token";
 
 interface CartContextType {
     cartItemsCount: number;

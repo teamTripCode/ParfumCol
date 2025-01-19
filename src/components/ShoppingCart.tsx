@@ -16,9 +16,9 @@ interface OrderDto {
 
 interface OrderItem {
     id: string;
-    orderId: String;
+    orderId: string;
     order: OrderDto;
-    lotionId: String;
+    lotionId: string;
     lotion: LotionDto;
     quantity: number;
     price: number;

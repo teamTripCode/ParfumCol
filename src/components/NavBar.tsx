@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { IconSearch, IconBriefcase2, IconMenu2, IconX } from '@tabler/icons-react';
+import { IconMenu2, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-import { TbShoppingCart } from 'react-icons/tb';
 import CartInNav from './cartNav';
 
 function NavBar() {
