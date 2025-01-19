@@ -73,7 +73,7 @@ const BlockchainDeliverySection = () => {
                         manos.
                     </p>
                     <div className="mt-12 mb-16">
-                        <div className="text-5xl font-serif mb-2">15,783</div>
+                        <div className="text-5xl font-serif mb-2">0</div>
                         <div className="text-sm text-gray-500">
                             ENTREGAS VERIFICADAS POR BLOCKCHAIN
                         </div>

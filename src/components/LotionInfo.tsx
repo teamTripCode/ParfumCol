@@ -7,19 +7,33 @@ import { useEffect, useState } from "react"
 import { formatToCOP } from "@/handlers/FormatToCop"
 import { useRouter } from "next/navigation"
 import { TbArrowLeft } from "react-icons/tb"
+import { useCart } from "@/context/cartContext"
 
 function LotionInfo({ lotionId }: { lotionId: string }) {
     const [infoLotion, setInfoLotion] = useState<LotionDto | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState<number>(1)
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
+    const { addToCart } = useCart();
     const router = useRouter()
 
     const countCart = ({ isAdd, isReduce }: { isAdd?: boolean, isReduce?: boolean }) => {
         if (isAdd) setCount(count + 1);
         if (isReduce && count > 1) setCount(count - 1);
     }
+
+    const handleAddToCart = async () => {
+        setIsAddingToCart(true);
+        try {
+            await addToCart(lotionId, count);
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        } finally {
+            setIsAddingToCart(false);
+        }
+    };
 
     useEffect(() => {
         const getInfoLotion = async () => {
@@ -93,6 +107,7 @@ function LotionInfo({ lotionId }: { lotionId: string }) {
                     </div>
                 </div>
             </div>
+            
             <div className="flex flex-wrap w-[90%] ml-[5%] min-h-dvh gap-12 md:gap-2 mb-10">
                 <div className="flex basis-[400px] grow">
                     {infoLotion.images && infoLotion.images.length > 0 ? (
@@ -116,8 +131,14 @@ function LotionInfo({ lotionId }: { lotionId: string }) {
                             <p className="cursor-pointer text-sm grid place-content-center">{count}</p>
                             <p className="cursor-pointer text-base" onClick={() => countCart({ isAdd: true })}>+</p>
                         </div>
-                        <div className="bg-black rounded-lg grid place-content-center px-2 cursor-pointer">
-                            <p className="text-sm text-white">Agregar al carrito</p>
+                        <div
+                            className={`bg-black rounded-lg grid place-content-center px-2 cursor-pointer ${isAddingToCart ? 'opacity-50' : ''}`}
+                            onClick={handleAddToCart}
+                            style={{ pointerEvents: isAddingToCart ? 'none' : 'auto' }}
+                        >
+                            <p className="text-sm text-white">
+                                {isAddingToCart ? 'Agregando...' : 'Agregar al carrito'}
+                            </p>
                         </div>
                     </div>
 

@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { IconSearch, IconBriefcase2, IconMenu2, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
+import { TbShoppingCart } from 'react-icons/tb';
+import CartInNav from './cartNav';
 
 function NavBar() {
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter()
 
@@ -24,22 +25,19 @@ function NavBar() {
 
             {/* Right Section */}
             <div className="flex flex-row items-center gap-4">
-                {/* Search Icon and Input */}
+                {/*
 
                 <div className="relative">
                     <div
                         className="grid place-content-center cursor-pointer"
-                        onClick={() => setIsSearchOpen(!isSearchOpen)}
                     >
                         <IconSearch className="text-gray-700" />
                     </div>
                 </div>
 
 
-                {/* Briefcase Icon */}
-                <div className="grid place-content-center">
-                    <IconBriefcase2 className="text-gray-700 cursor-pointer" />
-                </div>
+                /* Briefcase Icon */}
+                <CartInNav />
 
                 {/* Menu Icon (Mobile Only) */}
                 <div className="md:hidden grid place-content-center cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)}>
