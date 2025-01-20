@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            console.log("refresh: ", response.data)
+            // console.log("refresh: ", response.data)
 
             if (response.data.success && response.data.data) {
                 const data: Omit<AccountDto, 'password'> = {

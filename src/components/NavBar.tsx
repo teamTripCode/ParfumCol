@@ -14,7 +14,7 @@ function NavBar() {
             {/* Left Section */}
             <div className="hidden md:flex flex-row gap-5">
                 <p className="cursor-pointer text-lg" onClick={() => router.push('/catalogo')}>Catálogo</p>
-                <p className="cursor-pointer text-lg">Contacto</p>
+                <p className="cursor-pointer text-lg" onClick={() => router.push('/contacts')}>Contacto</p>
             </div>
 
             {/* Center Section */}
@@ -49,7 +49,7 @@ function NavBar() {
                 <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden">
                     <ul className="flex flex-col items-center gap-4 py-4">
                         <a className="cursor-pointer" onClick={() => router.push('/catalogo')}>Catálogo</a>
-                        <li className="cursor-pointer">Contacto</li>
+                        <li className="cursor-pointer" onClick={() => router.push('/contacts')}>Contacto</li>
                     </ul>
                 </div>
             )}

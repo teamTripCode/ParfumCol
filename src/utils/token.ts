@@ -10,7 +10,7 @@ export const storeToken = (token: string): void => {
   try {
     // Solo usar document.cookie con el formato correcto
     document.cookie = `@parfumcol/token=${token}; path=/; max-age=86400; samesite=lax`;
-    console.log('Token stored successfully');
+    // console.log('Token stored successfully');
   } catch (error) {
     console.error('Error storing token:', error);
     throw error;
@@ -25,7 +25,7 @@ export const storeUser = (user: Omit<AccountDto, 'password'>): void => {
     const userString = JSON.stringify(user);
     // Solo usar document.cookie con el formato correcto
     document.cookie = `@parfumcol/user=${userString}; path=/; max-age=86400; samesite=lax`;
-    console.log('User stored successfully');
+    // console.log('User stored successfully');
   } catch (error) {
     console.error('Error storing user:', error);
     throw error;
