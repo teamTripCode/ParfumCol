@@ -1,16 +1,7 @@
 import { AccountDto } from "@/types/account";
-import Cookies from 'js-cookie';
 
 export const TOKEN_KEY = '@parfumcol/token';
 export const USER_KEY = '@parfumcol/user';
-
-// Configuración de cookies
-const COOKIE_OPTIONS: Cookies.CookieAttributes = {
-  path: '/',
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  expires: 1 // 1 día
-};
 
 export const storeToken = (token: string): void => {
   if (!token) {

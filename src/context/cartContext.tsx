@@ -65,7 +65,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 updateCartCount(cartId); // Llamamos a updateCartCount con el cartId
             }
         }
-    }, []);
+    }, [getCartId, updateCartCount]);
 
     return (
         <CartContext.Provider value={{ cartItemsCount, updateCartCount, addToCart }}>
