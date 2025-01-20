@@ -60,11 +60,16 @@ export interface AccountDto {
 
 export interface AuthResponse {
     success: boolean;
-    access_token?: string; // El token está en el nivel superior.
-    error?: string; // Mensaje de error en caso de fallo.
-    data?: {
-        user: AccountDto; // Información del usuario.
-    };
+    accessToken?: string;
+    error?: string;
+    data?: Omit<AccountDto, 'password'>;
+}
+
+export interface JwtPayload {
+    accountId: string;
+    cartId: string;
+    iat: number;
+    exp: number;
 }
 
 

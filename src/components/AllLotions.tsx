@@ -40,6 +40,7 @@ function CatalogPreview() {
                                     src={lotion}
                                     alt="lotion"
                                     className="w-full h-full object-cover rounded-lg shadow-lg"
+                                    priority
                                 />
                             </div>
                         ))}

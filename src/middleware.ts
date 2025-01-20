@@ -1,50 +1,50 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 
+// Rutas protegidas que requieren autenticación
+const protectedRoutes = ['/profile', '/cart'];
+const authRoutes = ['/auth'];
+
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('@parfumcol/token');
-    const path = request.nextUrl.pathname;
+    const { pathname } = request.nextUrl;
+    
+    // Obtener cookies
+    const cookieToken = request.cookies.get('@parfumcol/token');
+    const cookieUser = request.cookies.get('@parfumcol/user');
 
-    // Debug info
-    console.log('Middleware executing for path:', path);
-    console.log('Token present:', !!token);
+    // Debug detallado
+    console.log('Middleware Debug:', {
+        pathname,
+        cookieTokenExists: !!cookieToken?.value,
+        cookieUserExists: !!cookieUser?.value,
+        cookieTokenValue: cookieToken?.value?.substring(0, 20) + '...',
+        cookieUserValue: cookieUser?.value?.substring(0, 20) + '...'
+    });
 
-    // Redirect logic for protected routes
-    if (path.startsWith('/profile')) {
-        if (!token?.value) {
-            // Store the attempted URL to redirect back after login if needed
-            const url = new URL('/auth', request.url);
-            return NextResponse.redirect(url);
+    // Verificar autenticación
+    const isAuthenticated = cookieToken?.value && cookieUser?.value;
+
+    // Para rutas protegidas
+    if (protectedRoutes.some(route => pathname.startsWith(route))) {
+        if (!isAuthenticated) {
+            console.log('Access denied - Redirecting to auth');
+            return NextResponse.redirect(new URL('/auth', request.url));
         }
     }
 
-    if (path.startsWith('/cart')) {
-        if (!token?.value) {
-            const url = new URL('/auth', request.url);
-            return NextResponse.redirect(url);
-        }
-    }
-
-    // Redirect logic for auth routes when already authenticated
-    if (path.startsWith('/auth')) {
-        if (token?.value) {
-            const url = new URL('/profile', request.url);
-            return NextResponse.redirect(url);
+    // Para rutas de autenticación
+    if (authRoutes.some(route => pathname.startsWith(route))) {
+        if (isAuthenticated) {
+            console.log('Already authenticated - Redirecting to profile');
+            return NextResponse.redirect(new URL('/profile', request.url));
         }
     }
 
     return NextResponse.next();
 }
 
-// Configuración del matcher para que coincida con la estructura src/app
 export const config = {
     matcher: [
-        // Rutas que quieres proteger
-        '/cart',
-        '/cart/:path*',
-        '/profile/:path*',
-        '/auth/:path*',
-        '/profile',
-        '/auth'
-    ]
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    ],
 };

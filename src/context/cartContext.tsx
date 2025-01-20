@@ -15,7 +15,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [cartItemsCount, setCartItemsCount] = useState(0);
-    const [user, setUser] = useState<AccountDto | null>(null);
+    const [user, setUser] = useState<Omit<AccountDto, 'password'> | null>(null);
 
     const apiEndpoint = process.env.NEXT_PUBLIC_ENDPOINT_BACKEND;
 

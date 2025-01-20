@@ -4,36 +4,78 @@ import Cookies from 'js-cookie';
 export const TOKEN_KEY = '@parfumcol/token';
 export const USER_KEY = '@parfumcol/user';
 
+// Configuración de cookies
 const COOKIE_OPTIONS: Cookies.CookieAttributes = {
   path: '/',
-  sameSite: 'Lax',  // Note la mayúscula en 'Lax'
-  expires: 7,
-  // secure: process.env.NODE_ENV === 'production'  // Opcional
-};
-
-export const getStoredToken = (): string | null => {
-  return Cookies.get(TOKEN_KEY) || null;
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production',
+  expires: 1 // 1 día
 };
 
 export const storeToken = (token: string): void => {
-  Cookies.set(TOKEN_KEY, token, COOKIE_OPTIONS);
-};
-
-export const storeUser = (user: AccountDto): void => {
-  Cookies.set(USER_KEY, JSON.stringify(user), COOKIE_OPTIONS);
-};
-
-export const getStoredUser = (): AccountDto | null => {
+  if (!token) {
+    throw new Error('Token is required');
+  }
   try {
-    const userStr = Cookies.get(USER_KEY);
-    if (!userStr) return null;
-    return JSON.parse(userStr);
-  } catch {
+    // Solo usar document.cookie con el formato correcto
+    document.cookie = `@parfumcol/token=${token}; path=/; max-age=86400; samesite=lax`;
+    console.log('Token stored successfully');
+  } catch (error) {
+    console.error('Error storing token:', error);
+    throw error;
+  }
+};
+
+export const storeUser = (user: Omit<AccountDto, 'password'>): void => {
+  if (!user || !user.id) {
+    throw new Error('Invalid user data');
+  }
+  try {
+    const userString = JSON.stringify(user);
+    // Solo usar document.cookie con el formato correcto
+    document.cookie = `@parfumcol/user=${userString}; path=/; max-age=86400; samesite=lax`;
+    console.log('User stored successfully');
+  } catch (error) {
+    console.error('Error storing user:', error);
+    throw error;
+  }
+};
+
+export const getStoredToken = (): string | null => {
+  try {
+    const cookies = document.cookie.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('@parfumcol/token='));
+    return tokenCookie ? tokenCookie.split('=')[1].trim() : null;
+  } catch (error) {
+    console.error('Error getting token:', error);
+    return null;
+  }
+};
+
+export const getStoredUser = (): Omit<AccountDto, 'password'> | null => {
+  try {
+    const cookies = document.cookie.split(';');
+    const userCookie = cookies.find(cookie => cookie.trim().startsWith('@parfumcol/user='));
+    if (!userCookie) return null;
+
+    const userStr = userCookie.split('=').slice(1).join('=').trim();
+    const user = JSON.parse(userStr);
+
+    if (!user.id) {
+      throw new Error('Invalid user data structure');
+    }
+    return user;
+  } catch (error) {
+    console.error('Error getting stored user:', error);
     return null;
   }
 };
 
 export const removeToken = (): void => {
-  Cookies.remove(TOKEN_KEY, { path: '/' });
-  Cookies.remove(USER_KEY, { path: '/' });
+  try {
+    document.cookie = `@parfumcol/token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    document.cookie = `@parfumcol/user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+  } catch (error) {
+    console.error('Error removing tokens:', error);
+  }
 };

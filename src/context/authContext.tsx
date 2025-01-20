@@ -6,9 +6,11 @@ import axios from "axios";
 import { AccountDto } from "@/types/account";
 import { AuthResponse } from "@/types/account";
 import { getStoredToken, storeToken, removeToken, storeUser, getStoredUser } from "../utils/token";
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from "@/types/account";
 
 interface AuthContextType {
-    user: AccountDto | null;
+    user: Omit<AccountDto, 'password'> | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
@@ -21,7 +23,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<AccountDto | null>(null);
+    const [user, setUser] = useState<Omit<AccountDto, 'password'> | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const apiEndpoint = process.env.NEXT_PUBLIC_ENDPOINT_BACKEND;
@@ -32,22 +34,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push('/auth');
     }, [router]);
 
-    const handleSuccessfulAuth = async (token: string, userData: AccountDto) => {
+    const handleSuccessfulAuth = async (token: string) => {
         try {
+            // 1. Decodificar el token
+            const decoded = jwtDecode<JwtPayload>(token);
+            const { accountId } = decoded;
+
+            // 2. Obtener datos del usuario primero
+            const response = await axios.get<{
+                success: boolean;
+                data: Omit<AccountDto, 'password'>;
+            }>(`${apiEndpoint}/accounts/me/${accountId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("dataFull: ", response.data)
+
+            if (!response.data.success || !response.data.data) {
+                throw new Error('Failed to fetch user data');
+            }
+
+            // 3. Almacenar token y usuario de forma síncrona
             storeToken(token);
-            storeUser(userData);
-            setUser(userData);
+            storeUser(response.data.data);
 
-            // Esperar a que se establezcan las cookies
-            await new Promise(resolve => setTimeout(resolve, 100));
+            // 4. Actualizar estado
+            setUser(response.data.data);
 
-            // Verificar que las cookies se establecieron correctamente
+            // 5. Verificar que todo se almacenó correctamente
             const storedToken = getStoredToken();
-            if (!storedToken) {
+            const storedUser = getStoredUser();
+
+            if (!storedToken || !storedUser) {
                 throw new Error('Failed to store authentication data');
             }
 
-            // Usar router.push para la navegación
+            console.log("success login")
+
+            // 6. Redireccionar sin delay
             router.push('/profile');
         } catch (error) {
             console.error('Auth error:', error);
@@ -71,9 +97,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
+            console.log("refresh: ", response.data)
+
             if (response.data.success && response.data.data) {
-                setUser(response.data.data.user);
-                storeUser(response.data.data.user);
+                const data: Omit<AccountDto, 'password'> = {
+                    id: response.data.data.id || '',
+                    name: response.data.data.name || '',
+                    lastName: response.data.data.lastName || '',
+                    email: response.data.data.email || '',
+                    country: response.data.data.country || '',
+                    code_country: response.data.data.code_country || '',
+                    city: response.data.data.city || '',
+                    phone: response.data.data.phone || '',
+                    home_address: response.data.data.home_address || '',
+                };
+                setUser(data);
+                storeUser(data);
             }
         } catch (error) {
             console.error("Error refreshing user:", error);
@@ -86,8 +125,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const response = await axios.post<AuthResponse>(`${apiEndpoint}/accounts`, userData);
 
-            if (response.data.success && response.data.access_token && response.data.data) {
-                await handleSuccessfulAuth(response.data.access_token, response.data.data.user);
+            if (response.data.success && response.data.accessToken && response.data.data) {
+                await handleSuccessfulAuth(response.data.accessToken);
             } else {
                 throw new Error(response.data.error || "Error en el registro");
             }
@@ -104,8 +143,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 password,
             });
 
-            if (response.data.success && response.data.access_token && response.data.data) {
-                await handleSuccessfulAuth(response.data.access_token, response.data.data.user);
+            console.log(response)
+
+            if (response.data.success && response.data.accessToken) {
+                await handleSuccessfulAuth(response.data.accessToken);
             } else {
                 throw new Error(response.data.error || "Error en el inicio de sesión");
             }
@@ -122,8 +163,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
 
             if (response.data.success && response.data.data) {
-                setUser(response.data.data.user);
-                storeUser(response.data.data.user);
+                setUser(response.data.data);
+                storeUser(response.data.data);
             }
         } catch (error) {
             console.error("Update profile error:", error);
