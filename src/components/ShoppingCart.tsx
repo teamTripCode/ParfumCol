@@ -1,30 +1,11 @@
-"use client"
+"use client";
 
+import { formatToCOP } from '@/handlers/FormatToCop';
+import { OrderItem } from '@/types/account';
+import { formToJSON } from 'axios';
 import Image from 'next/image';
 import React from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
-
-interface LotionDto {
-    name: string;
-    images: string[];
-    price: number;
-    hasDiscount?: boolean;  // New property to control discount
-}
-
-interface OrderDto {
-    totalAmount: number;
-}
-
-interface OrderItem {
-    id: string;
-    orderId: string;
-    order: OrderDto;
-    lotionId: string;
-    lotion: LotionDto;
-    quantity: number;
-    price: number;
-    totalPrice: number;
-}
 
 interface ShoppingCartProps {
     items?: OrderItem[];
@@ -38,13 +19,8 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
     // Calculate subtotal
     const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
-    // Calculate discount only for items that have hasDiscount flag
-    const discountableAmount = cartItems.reduce((sum, item) =>
-        item.lotion.hasDiscount ? sum + item.totalPrice : sum, 0);
-    const discount = discountableAmount * 0.1; // 10% discount only on eligible items
-
     const insurance = 24.99;
-    const total = subtotal - discount + insurance;
+    const total = subtotal + insurance;
 
     return (
         <div className="w-full max-w-4xl mx-auto p-6 space-y-8 mt-20">
@@ -59,21 +35,24 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                     {cartItems.map((item) => (
                         <div key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow">
                             <div className="h-24 w-24 flex-shrink-0">
-                                <Image
-                                    width={500}
-                                    height={500}
-                                    src={item.lotion.images?.[0] || "/api/placeholder/96/96"}
-                                    alt={item.lotion.name}
-                                    className="h-full w-full object-cover rounded-md"
-                                />
+                                {item.lotion?.images?.[0] ? (
+                                    <Image
+                                        width={500}
+                                        height={500}
+                                        src={item.lotion.images[0]}
+                                        alt={item.lotion.name || "Producto"}
+                                        className="h-full w-full object-cover rounded-md"
+                                    />
+                                ) : (
+                                    <div className="h-full w-full bg-gray-200 flex items-center justify-center rounded-md">
+                                        <span className="text-gray-500">Sin imagen</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="ml-6 flex-1">
-                                <h3 className="text-lg font-medium text-gray-800">{item.lotion.name}</h3>
-                                <p className="text-lg font-semibold text-gray-900">${item.price.toFixed(2)}</p>
-                                {item.lotion.hasDiscount && (
-                                    <span className="text-sm text-green-600">10% discount available</span>
-                                )}
+                                <h3 className="text-lg font-medium text-gray-800">{item.lotion?.name || "Producto"}</h3>
+                                <p className="text-lg font-semibold text-gray-900">{formatToCOP(item.price)}</p>
                             </div>
 
                             <div className="flex items-center space-x-4">
@@ -115,25 +94,18 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                     <div className="space-y-3">
                         <div className="flex justify-between">
                             <span className="text-gray-600">Subtotal</span>
-                            <span className="font-medium">${subtotal.toFixed(2)}</span>
+                            <span className="font-medium">{formatToCOP(subtotal)}</span>
                         </div>
-
-                        {discountableAmount > 0 && (
-                            <div className="flex justify-between text-green-600">
-                                <span>Discount (10% on eligible items)</span>
-                                <span>-${discount.toFixed(2)}</span>
-                            </div>
-                        )}
 
                         <div className="flex justify-between">
                             <span className="text-gray-600">Insurance</span>
-                            <span className="font-medium">${insurance.toFixed(2)}</span>
+                            <span className="font-medium">{formatToCOP(insurance)}</span>
                         </div>
 
                         <div className="pt-3 border-t border-gray-200">
                             <div className="flex justify-between">
                                 <span className="text-lg font-semibold">Total</span>
-                                <span className="text-lg font-semibold">${total.toFixed(2)}</span>
+                                <span className="text-lg font-semibold">{formatToCOP(total)}</span>
                             </div>
                         </div>
                     </div>

@@ -38,10 +38,10 @@ function ContactPage() {
                     {/* Hero Section */}
                     <div className="text-center mb-16">
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                            Get in Touch
+                            Ponte en contacto
                         </h1>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Connect with us through any of our channels. We're here to help and answer any questions you may have.
+                            Conéctate con nosotros a través de cualquiera de nuestros canales. Estamos aquí para ayudarte y responder a cualquier pregunta que puedas tener.
                         </p>
                     </div>
 

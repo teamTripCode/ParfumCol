@@ -41,10 +41,10 @@ function LotionInfo({ lotionId }: { lotionId: string }) {
                 setLoading(true);
                 // Loguear la URL para debug
                 const url = `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/admin/lotion/${lotionId}`;
-                console.log('Fetching from URL:', url);
+                // console.log('Fetching from URL:', url);
 
                 const resLotion = await axios.get(url);
-                console.log('Response:', resLotion);
+                // console.log('Response:', resLotion);
 
                 if (!resLotion.data.success) {
                     throw new Error(resLotion.data.error);

@@ -71,8 +71,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 throw new Error('Failed to store authentication data');
             }
 
-            console.log("success login")
-
             // 6. Redireccionar sin delay
             router.push('/profile');
         } catch (error) {
@@ -110,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     city: response.data.data.city || '',
                     phone: response.data.data.phone || '',
                     home_address: response.data.data.home_address || '',
+                    cart: response.data.data.cart || undefined,
                 };
                 setUser(data);
                 storeUser(data);

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import axios from 'axios';
 import { AccountDto } from '@/types/account';
 import { getStoredUser } from "../utils/token";
+import { useAuth } from './authContext';
 
 interface CartContextType {
   cartItemsCount: number;
@@ -15,7 +16,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [user, setUser] = useState<Omit<AccountDto, 'password'> | null>(null);
+  // const [user, setUser] = useState<Omit<AccountDto, 'password'> | null>(null);
+  const { user } = useAuth();
 
   const apiEndpoint = process.env.NEXT_PUBLIC_ENDPOINT_BACKEND;
 
@@ -28,7 +30,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateCartCount = useCallback(async (cartId: string) => {
     try {
-      const response = await axios.get(`${apiEndpoint}/cart/${cartId}/count`);
+      const response = await axios.get(`${apiEndpoint}/accounts/cart/${cartId}/count`);
       if (response.data.success) {
         setCartItemsCount(response.data.data);
       }
@@ -39,14 +41,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (lotionId: string, quantity: number) => {
     try {
-      const cartId = getCartId(); // Obtenemos el cartId
+      const cartId = getCartId() // Obtenemos el cartId
+
       if (!cartId) {
         throw new Error('No cartId found for the user');
       }
-      const response = await axios.post(`${apiEndpoint}/cart/${cartId}/add`, {
+
+      const response = await axios.post(`${apiEndpoint}/accounts/${user?.id}/cart`, {
         lotionId,
         quantity
       });
+
       if (response.data.success) {
         await updateCartCount(cartId); // Pasamos el cartId
       }
@@ -55,12 +60,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, []); // Ejecutar solo una vez al montar el componente
+  // useEffect(() => {
+  //   const storedUser = getStoredUser();
+  //   if (storedUser) {
+  //     setUser(storedUser);
+  //   }
+  // }, []); // Ejecutar solo una vez al montar el componente
 
   useEffect(() => {
     if (user) {
