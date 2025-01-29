@@ -10,6 +10,17 @@ import AddressForm from "@/components/AddresForm";
 import { GrTransaction } from "react-icons/gr";
 import { PiArrowUpRightBold } from "react-icons/pi";
 
+interface UserData {
+    email: string;
+    names: string;
+    lastNames: string;
+    phone: string;
+    addressOfResidence?: string; // Puedes ponerlo como opcional si no siempre está presente
+    country?: string | null;
+    city?: string | null;
+}
+
+
 function Profile() {
     const { user } = useAuth();
 
