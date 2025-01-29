@@ -11,3 +11,10 @@ export interface LotionDto {
 }
 
 export type genreLotion = "man" | "woman" | "arab_men" | "arab_woman" | "unisex";
+
+export interface LotionHouse {
+    id: number;
+    name: string;
+    established: string;
+    logo?: string;
+  }

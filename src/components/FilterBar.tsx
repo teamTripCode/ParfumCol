@@ -1,35 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaSearch, FaChevronDown, FaFilter } from 'react-icons/fa';
 
 const FilterBar = ({
     searchQuery,
     setSearchQuery,
-    setViewMode,
     sortOpen,
     setSortOpen,
 }: {
     searchQuery: string;
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-    viewMode: string;
-    setViewMode: React.Dispatch<React.SetStateAction<string>>;
     sortOpen: boolean;
     setSortOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [isFilterVisible, setFilterVisible] = useState(false);
-
-    // Forzar vista en lista en móviles
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 768) {
-                setViewMode('list'); // Forzar vista en lista
-            }
-        };
-
-        handleResize(); // Asegurarse de aplicar en el primer render
-        window.addEventListener('resize', handleResize);
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, [setViewMode]);
 
     return (
         <div className="w-full border-b border-gray-200 pt-10">
@@ -97,11 +80,6 @@ const FilterBar = ({
                         <button className="text-sm text-gray-600 hover:text-gray-900">Femenino</button>
                         <button className="text-sm text-gray-600 hover:text-gray-900">Unisex</button>
                         <button className="text-sm text-gray-600 hover:text-gray-900">Solo disponibles</button>
-
-                        {/* Alternar vista (solo en escritorio) */}
-                        <div className="hidden md:flex items-center space-x-2 border-l border-gray-200 pl-6">
-                            {/* Estos botones ya no se muestran en móvil */}
-                        </div>
                     </div>
                 </div>
             </div>

@@ -5,9 +5,9 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import LotionCard from "./LotionCard";
 import FilterBar from "./FilterBar";
 import { TbLoader } from "react-icons/tb";
+import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 const SearchAndFilterBar = () => {
-    const [viewMode, setViewMode] = useState("grid");
     const [sortOpen, setSortOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [lotions, setLotions] = useState<LotionDto[]>([]);
@@ -15,6 +15,7 @@ const SearchAndFilterBar = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState(1);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+    const [visiblePages, setVisiblePages] = useState([1, 2, 3]);
 
     const fetchLotions = useCallback(async () => {
         setLoading(true);
@@ -75,10 +76,9 @@ const SearchAndFilterBar = () => {
                     page,
                     scrollPosition: window.scrollY,
                     searchQuery,
-                    viewMode,
                 };
                 localStorage.setItem('catalogState', JSON.stringify(currentState));
-            }, 100); // Throttle de 100ms
+            }, 100);
         };
 
         window.addEventListener('scroll', handleScroll);
@@ -88,7 +88,7 @@ const SearchAndFilterBar = () => {
                 clearTimeout(scrollTimeout.current);
             }
         };
-    }, [page, searchQuery, viewMode]);
+    }, [page, searchQuery]);
 
     // Guardar estado cuando cambian los valores
     useEffect(() => {
@@ -96,10 +96,9 @@ const SearchAndFilterBar = () => {
             page,
             scrollPosition: window.scrollY,
             searchQuery,
-            viewMode,
         };
         localStorage.setItem('catalogState', JSON.stringify(currentState));
-    }, [page, searchQuery, viewMode]);
+    }, [page, searchQuery]);
 
     // Recuperar estado desde localStorage
     useEffect(() => {
@@ -109,14 +108,11 @@ const SearchAndFilterBar = () => {
                 page: savedPage,
                 scrollPosition: savedScroll,
                 searchQuery: savedQuery,
-                viewMode: savedViewMode
             } = JSON.parse(savedState);
 
             setPage(savedPage || 1);
             setSearchQuery(savedQuery || "");
-            setViewMode(savedViewMode || "grid");
 
-            // Restaurar scroll después de que el contenido se haya cargado
             const restoreScroll = () => {
                 window.scrollTo(0, savedScroll || 0);
             };
@@ -134,77 +130,101 @@ const SearchAndFilterBar = () => {
         fetchLotions();
     }, [fetchLotions]);
 
+    const updateVisiblePages = () => {
+        const startPage = Math.max(1, page - 1);
+        const endPage = Math.min(totalPages, startPage + 2);
+        const newVisiblePages = [];
+
+        for (let i = startPage; i <= endPage; i++) {
+            newVisiblePages.push(i);
+        }
+
+        setVisiblePages(newVisiblePages);
+    };
+
+    useEffect(() => {
+        updateVisiblePages();
+    }, [page, totalPages]);
+
     const handleNextPage = () => {
         if (page < totalPages) {
             setPage(page + 1);
-            window.scrollTo(0, 0); // Scroll al inicio al cambiar de página
         }
     };
 
     const handlePreviousPage = () => {
         if (page > 1) {
             setPage(page - 1);
-            window.scrollTo(0, 0); // Scroll al inicio al cambiar de página
         }
     };
 
     return (
-        <div className="w-[90%] ml-[5%] border-b border-gray-200 pt-20">
+        <div className="w-[90%] ml-[5%] border-b p-3 border-gray-200 pt-10">
             <FilterBar
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
                 sortOpen={sortOpen}
                 setSortOpen={setSortOpen}
             />
 
-            <div className="mt-8 w-full grid place-content-center min-h-dvh">
+            <main className="mt-8 min-h-dvh">
                 {loading ? (
-                    <div className="flex flex-row gap-2">
-                        <div className="grid place-content-center">
-                            <TbLoader className="animate-rotate text-gray-600" />
-                        </div>
+                    <div className="flex items-center justify-center gap-2">
+                        <TbLoader className="animate-rotate text-gray-600" />
                         <p className="font-semibold text-gray-600">Cargando</p>
                     </div>
                 ) : (
-                    <div
-                        className={
-                            viewMode === "grid"
-                                ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                                : "flex flex-col space-y-6"
-                        }
-                    >
+                    <div className="mx-auto">
                         {lotions.length > 0 ? (
-                            lotions.map((lotion) => (
-                                <LotionCard viewMode={viewMode} key={lotion.id} lotion={lotion} />
-                            ))
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-max">
+                                {lotions.map((lotion) => (
+                                    <LotionCard key={lotion.id} lotion={lotion} />
+                                ))}
+                            </div>
                         ) : (
-                            <p>No se encontraron lociones.</p>
+                            <p className="text-center text-gray-500">No se encontraron lociones.</p>
                         )}
                     </div>
                 )}
-            </div>
+            </main>
 
-            <div className="flex justify-center mt-10 mb-6">
+            <div className="flex justify-center items-center gap-3 mt-10 mb-10">
                 <button
                     onClick={handlePreviousPage}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
                     disabled={page === 1}
+                    className="flex items-center space-x-1 px-3 py-1 rounded-lg border border-gray-300 
+                    hover:bg-gray-50 transition-colors duration-300 disabled:opacity-50 
+                    disabled:cursor-not-allowed disabled:hover:bg-white"
                 >
-                    Anterior
+                    <MdNavigateBefore className="w-4 h-4" />
+                    <span className="text-sm">Anterior</span>
                 </button>
-                <div className="mx-4 grid place-content-center">
-                    <p>
-                        {page} de {totalPages}
-                    </p>
+
+                <div className="flex items-center space-x-1">
+                    {visiblePages.map((pageNumber) => (
+                        <button
+                            key={pageNumber}
+                            onClick={() => setPage(pageNumber)}
+                            className={`w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors 
+                                duration-300 ${page === pageNumber
+                                    ? 'bg-purple-500 text-white'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                                }`}
+                        >
+                            {pageNumber}
+                        </button>
+                    ))}
                 </div>
+
                 <button
                     onClick={handleNextPage}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
                     disabled={page === totalPages}
+                    className="flex items-center space-x-1 px-3 py-1 rounded-lg border border-gray-300 
+                    hover:bg-gray-50 transition-colors duration-300 disabled:opacity-50 
+                    disabled:cursor-not-allowed disabled:hover:bg-white"
                 >
-                    Siguiente
+                    <span className="text-sm">Siguiente</span>
+                    <MdNavigateNext className="w-4 h-4" />
                 </button>
             </div>
         </div>
