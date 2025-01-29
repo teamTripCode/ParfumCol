@@ -3,9 +3,9 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { FaBuilding, FaImage, FaIndustry, FaStar } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 import { GiSharpCrown } from "react-icons/gi";
-import { MdNavigateNext, MdNavigateBefore, MdOutlineStore } from "react-icons/md";
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 
 interface House {
     id: number;

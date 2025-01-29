@@ -2,8 +2,7 @@
 
 import { AccountDto } from "@/types/account";
 import { useEffect, useState } from "react";
-import { FaEnvelope, FaUser, FaPhone, FaHome } from "react-icons/fa"; // Importando íconos apropiados
-import Select from "react-select";
+import { FaEnvelope, FaUser, FaPhone } from "react-icons/fa"; // Importando íconos apropiados
 
 const UpdateProfileForm: React.FC<{
     isLoading: boolean;

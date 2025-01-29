@@ -14,7 +14,7 @@ const AddressForm: React.FC = () => {
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
     const [addresses, setAddresses] = useState<Address[]>([]);
-    const [selectedMainAddress, setSelectedMainAddress] = useState<number | null>(null);
+    // const [selectedMainAddress, setSelectedMainAddress] = useState<number | null>(null);
 
     const handleAddAddress = () => {
         if (country && city && address) {
@@ -30,7 +30,7 @@ const AddressForm: React.FC = () => {
     };
 
     const handleSelectMainAddress = (index: number) => {
-        setSelectedMainAddress(index);
+        // setSelectedMainAddress(index);
         setAddresses((prev) =>
             prev.map((address, i) => ({
                 ...address,

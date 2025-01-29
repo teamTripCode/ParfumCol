@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { IconMenu2, IconSearch, IconX } from '@tabler/icons-react';
+import { IconMenu2, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import CartInNav from './cartNav';
 import { TbUserCircle } from 'react-icons/tb';

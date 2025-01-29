@@ -5,7 +5,6 @@ import UpdateProfileForm from "@/components/formProfile";
 import NavBar from "@/components/NavBar";
 import { useAuth } from "@/context/authContext";
 import { TbDatabaseCog, TbMailbox } from "react-icons/tb";
-import { toast } from "sonner";
 import { AccountDto } from "@/types/account";
 import AddressForm from "@/components/AddresForm";
 import { GrTransaction } from "react-icons/gr";

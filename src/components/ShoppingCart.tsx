@@ -2,7 +2,6 @@
 
 import { formatToCOP } from '@/handlers/FormatToCop';
 import { OrderItem } from '@/types/account';
-import { formToJSON } from 'axios';
 import Image from 'next/image';
 import React from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';

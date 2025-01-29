@@ -2,8 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { AccountDto } from '@/types/account';
-import { getStoredUser } from "../utils/token";
 import { useAuth } from './authContext';
 
 interface CartContextType {
