@@ -1,85 +1,112 @@
-import React, { useState } from 'react';
-import { FaSearch, FaChevronDown, FaFilter } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaSearch, FaChevronDown } from "react-icons/fa";
 
 const FilterBar = ({
     searchQuery,
     setSearchQuery,
     sortOpen,
     setSortOpen,
+    selectedFilters,
+    setSelectedFilters,
+    fetchLotions,
 }: {
     searchQuery: string;
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
     sortOpen: boolean;
     setSortOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedFilters: string[];
+    setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
+    fetchLotions: (query?: string, order?: "asc" | "desc", filters?: string[]) => void;
 }) => {
     const [isFilterVisible, setFilterVisible] = useState(false);
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+    const handleFilterClick = (filter: string) => {
+        setSelectedFilters((prevFilters) => {
+            const isActive = prevFilters.includes(filter);
+            const newFilters = isActive
+                ? prevFilters.filter((f) => f !== filter)
+                : [...prevFilters, filter];
+
+            fetchLotions(searchQuery, sortOrder, newFilters);
+            return newFilters;
+        });
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+        query.trim() === "" ? fetchLotions() : fetchLotions(query, sortOrder, selectedFilters);
+    };
+
+    const handleSortSelection = (order: "asc" | "desc") => {
+        setSortOrder(order);
+        setSortOpen(false);
+        fetchLotions(searchQuery, order, selectedFilters);
+    };
 
     return (
-        <div className="w-full border-b border-gray-200 pt-10">
-            <div className="max-w-7xl mx-auto px-4 py-4">
-                {/* Botón de filtro para móviles */}
-                <div className="flex items-center justify-between md:hidden">
-                    <button
-                        onClick={() => setFilterVisible(!isFilterVisible)}
-                        className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        <FaFilter className="w-5 h-5" />
-                        <span>Filtros</span>
-                    </button>
-                </div>
-
-                {/* Contenido del filtro */}
-                <div
-                    className={`${isFilterVisible ? 'block' : 'hidden'
-                        } mt-4 md:flex md:items-center md:justify-between md:space-x-8`}
-                >
-                    {/* Barra de búsqueda */}
-                    <div className="flex items-center flex-1 max-w-md">
-                        <FaSearch className="w-4 h-4 text-gray-400" />
+        <div className="w-full mt-6">
+            <div className="flex flex-wrap justify-between md:gap-6 gap-5">
+                {/* Barra de búsqueda */}
+                <div className="flex basis-[400px] grow">
+                    <div className="flex text-base w-full rounded-md">
+                        <div className="pt-2">
+                            <FaSearch className="w-4 h-4 text-gray-400" />
+                        </div>
                         <input
                             type="text"
-                            placeholder="Buscar por nombre o marca"
+                            placeholder="Buscar lociones..."
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full ml-2 outline-none text-sm text-gray-600 placeholder-gray-400 px-4 rounded-md py-2"
+                            onChange={handleSearchChange}
+                            className="w-full h-8 ml-2 outline-none text-sm text-gray-600 placeholder-gray-400 bg-white px-3 py-2 rounded-md"
                         />
                     </div>
+                </div>
 
-                    {/* Opciones de filtro */}
-                    <div className="flex items-center space-x-6 mt-4 md:mt-0">
-                        {/* Ordenar */}
-                        <div className="relative">
-                            <button
-                                onClick={() => setSortOpen(!sortOpen)}
-                                className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900"
-                            >
-                                <span>Ordenar por</span>
-                                <FaChevronDown className="w-4 h-4" />
-                            </button>
-
-                            {sortOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Precio: Mayor a menor
-                                    </a>
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Precio: Menor a mayor
-                                    </a>
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Más recientes
-                                    </a>
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Alfabético
-                                    </a>
-                                </div>
-                            )}
+                {/* Contenedor de filtros y orden */}
+                <div className="w-full basis-[400px] flex flex-col gap-2">
+                    {/* Ordenar */}
+                    <button
+                        onClick={() => setSortOpen(!sortOpen)}
+                        className="flex justify-start text-sm text-gray-600 grow px-4 py-2  h-auto hover:text-gray-900 bg-gray-100 w-full rounded-md"
+                    >
+                        <div className="flex flex-row gap-2 justify-between w-full">
+                            <span className="gr">Ordenar por</span>
+                            <div className="grid place-content-center">
+                                <FaChevronDown />
+                            </div>
                         </div>
+                    </button>
 
-                        {/* Filtros adicionales */}
-                        <button className="text-sm text-gray-600 hover:text-gray-900">Masculino</button>
-                        <button className="text-sm text-gray-600 hover:text-gray-900">Femenino</button>
-                        <button className="text-sm text-gray-600 hover:text-gray-900">Unisex</button>
-                        <button className="text-sm text-gray-600 hover:text-gray-900">Solo disponibles</button>
+                    {/* Dropdown de opciones de ordenar */}
+                    {sortOpen && (
+                        <div className="w-full bg-white border border-gray-200 rounded-md shadow-lg z-10 mt-2">
+                            <button
+                                onClick={() => handleSortSelection("asc")}
+                                className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${sortOrder === "asc" ? "font-bold text-blue-500" : "text-gray-700"}`}
+                            >
+                                Precio - Menor a Mayor
+                            </button>
+                            <button
+                                onClick={() => handleSortSelection("desc")}
+                                className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${sortOrder === "desc" ? "font-bold text-blue-500" : "text-gray-700"}`}
+                            >
+                                Precio - Mayor a Menor
+                            </button>
+                        </div>
+                    )}
+
+                    <div className={`flex flex-wrap gap-2 mt-4 md:mt-0 w-full`}>
+                        {["Masculino", "Femenino", "Unisex"].map((filter) => (
+                            <button
+                                key={filter}
+                                onClick={() => handleFilterClick(filter)}
+                                className={`text-sm px-3 py-1 rounded-md border border-gray-300 shadow-md ${selectedFilters.includes(filter) ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"}`}
+                            >
+                                {filter}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>

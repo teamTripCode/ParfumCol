@@ -16,53 +16,56 @@ const SearchAndFilterBar = () => {
     const [page, setPage] = useState(1);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
     const [visiblePages, setVisiblePages] = useState([1, 2, 3]);
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const fetchLotions = useCallback(async () => {
         setLoading(true);
+        const isSearching = searchQuery.trim() !== "";
+
+        const url = isSearching
+            ? `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/admin/search_lotion`
+            : `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/admin/all_lotions?page=${page}`;
+
+        // Mapeamos los filtros seleccionados para pasarlos como parámetros
+        const genreMap: Record<string, string> = {
+            "Masculino": "Masculino",
+            "Femenino": "Femenino",
+            "Unisex": "Unisex",
+        };
+
+        const selectedGenre = selectedFilters.find(filter => genreMap[filter]);
+        const onlyAvailable = selectedFilters.includes("Solo disponibles");
+
         try {
-            let url = "";
-
-            if (searchQuery.trim() === "") {
-                url = `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/admin/all_lotions?page=${page}`;
-            } else {
-                url = `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/admin/search_lotion`;
-            }
-
             const response = await fetch(url, {
-                method: searchQuery.trim() === "" ? "GET" : "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body:
-                    searchQuery.trim() !== ""
-                        ? JSON.stringify({
-                            name: searchQuery,
-                            page,
-                            priceOrder: "asc",
-                        })
-                        : undefined,
+                method: isSearching ? "POST" : "GET",
+                headers: { "Content-Type": "application/json" },
+                body: isSearching
+                    ? JSON.stringify({
+                        name: searchQuery,
+                        page,
+                        priceOrder: "asc",
+                        genre: selectedGenre || undefined, // Solo se envía si hay género seleccionado
+                        onlyAvailable, // Esto depende de cómo manejes disponibilidad en el backend
+                    })
+                    : undefined,
             });
+
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
             const data = await response.json();
 
-            if (data.success) {
-                setLotions(data.data);
-                if (data.pagination) {
-                    setTotalPages(data.pagination.totalPages);
-                } else {
-                    setTotalPages(1);
-                }
-            } else {
-                setLotions([]);
-                setTotalPages(1);
-            }
+            setLotions(data.success ? data.data : []);
+            setTotalPages(data.pagination?.totalPages || 1);
         } catch (error) {
             console.error("Error fetching lotions:", error);
             setLotions([]);
             setTotalPages(1);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    }, [searchQuery, page]);
+    }, [searchQuery, page, selectedFilters]);
+
 
     // Guardar scroll position con throttling
     useEffect(() => {
@@ -165,6 +168,9 @@ const SearchAndFilterBar = () => {
                 setSearchQuery={setSearchQuery}
                 sortOpen={sortOpen}
                 setSortOpen={setSortOpen}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+                fetchLotions={fetchLotions}
             />
 
             <main className="mt-8 min-h-dvh">
