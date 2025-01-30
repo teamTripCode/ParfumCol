@@ -29,16 +29,16 @@ function NavBar() {
 
                         <p
                             className="cursor-pointer text-lg px-2 py-1 hover:bg-gray-200 border border-transparent hover:border-gray-300 rounded-md"
-                            onClick={() => router.push('/contacts')}
+                            onClick={() => router.push('/casas')}
                         >
-                            Contacto
+                            Casas
                         </p>
 
                         <p
                             className="cursor-pointer text-lg px-2 py-1 hover:bg-gray-200 border border-transparent hover:border-gray-300 rounded-md"
-                            onClick={() => router.push('/casas')}
+                            onClick={() => router.push('/contacts')}
                         >
-                            Casas
+                            Contacto
                         </p>
                     </div>
                 </div>
@@ -100,6 +100,15 @@ function NavBar() {
                             }}
                         >
                             Catálogo
+                        </li>
+                        <li
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setIsMenuOpen(false);
+                                router.push('/casas');
+                            }}
+                        >
+                            Casas
                         </li>
                         <li
                             className="cursor-pointer"

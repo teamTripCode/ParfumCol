@@ -35,7 +35,7 @@ const LotionCard = ({ lotion }: LotionCardProps) => {
                     <span className="text-lg font-medium">{formatToCOP(lotion.price)}</span>
                     <button
                         className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors duration-300"
-                        onClick={() => router.push(`lotion/${lotion.id}`)}
+                        onClick={() => router.push(`../lotion/${lotion.id}`)}
                     >
                         Ver Detalles
                     </button>

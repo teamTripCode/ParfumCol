@@ -63,16 +63,17 @@ const PerfumeHousesGrid: React.FC = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20">
-            {/* Título con línea decorativa */}
-            <div className="relative mb-16">
-                <div className="grid place-content-center mb-5">
-                    <GiSharpCrown size={50} className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"  />
-                </div>
 
-                <h2 className="md:text-2xl text-1xl font-light text-gray-600 text-center">
-                    Explora las casas de perfumes que más te gustan.
-                </h2>
-                {/* <div className="absolute w-40 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 -bottom-4 left-1/2 transform -translate-x-1/2" /> */}
+            <div className="grid place-content-center mb-24">
+                <div className="flex flex-row md:gap-7 gap-3 bg-gray-100 px-5 py-3 rounded-3xl">
+                    <div className="grid place-content-center bg-gray-300 p-2 rounded-full drop-shadow-md border border-gray-300">
+                        <GiSharpCrown size={20} className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+                    </div>
+
+                    <h2 className="md:text-xl text-xs font-light drop-shadow-lg text-gray-600 grid place-content-center">
+                        Explora las casas de perfumes que más te gustan.
+                    </h2>
+                </div>
             </div>
 
             {/* Estado de carga */}

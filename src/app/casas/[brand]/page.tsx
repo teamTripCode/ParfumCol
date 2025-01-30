@@ -83,7 +83,7 @@ function LotionsByBrands() {
                         {infoLotion?.logo == null ? (
                             <RiImageCircleAiLine size={80} />
                         ) : (
-                            <Image src={infoLotion.logo} alt={"logo"} width={100} height={100} />
+                            <Image src={infoLotion.logo} alt={"logo"} width={150} height={150} className="drop-shadow-xl" />
                         )}
                     </div>
                     {/* <h1 className="grid place-content-center text-2xl">{infoLotion?.name}</h1> */}
