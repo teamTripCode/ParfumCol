@@ -86,7 +86,7 @@ function LotionsByBrands() {
                             <Image src={infoLotion.logo} alt={"logo"} width={100} height={100} />
                         )}
                     </div>
-                    <h1 className="grid place-content-center text-2xl">{infoLotion?.name}</h1>
+                    {/* <h1 className="grid place-content-center text-2xl">{infoLotion?.name}</h1> */}
                 </div>
 
                 {/* Grid de lociones */}

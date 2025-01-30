@@ -109,10 +109,10 @@ const PerfumeHousesGrid: React.FC = () => {
                                                           duration-300 group-hover:text-gray-400" />
                                     )}
                                 </div>
-                                <h3 className="text-xl font-light text-gray-700 text-center transition-colors 
+                                {/* <h3 className="text-xl font-light text-gray-700 text-center transition-colors 
                                              duration-300 group-hover:text-gray-900">
                                     {house.name}
-                                </h3>
+                                </h3> */}
                             </div>
                         </div>
                     ))}

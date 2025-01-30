@@ -107,18 +107,18 @@ const HousesLotionsCarrousel = () => {
                             className="flex-none w-[80vw] md:w-64 snap-center transform transition-transform duration-300"
                         >
                             <div className="border border-gray-100 rounded-lg p-4 md:p-6 h-40 md:h-48 flex flex-col items-center justify-center space-y-4 hover:shadow-md transition-all duration-300 bg-white">
-                                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <div className="w-28 h-12 rounded-full flex items-center justify-center">
                                     {house.logo ? (
-                                        <Image src={house.logo} width={50} height={50} alt="logo" />
+                                        <Image src={house.logo} width={300} height={300} alt="logo" className='w-52 h-auto drop-shadow-xl' />
                                     ) : (
                                         <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24">
                                             <path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                                         </svg>
                                     )}
                                 </div>
-                                <div className="text-center">
+                                {/* <div className="text-center">
                                     <h3 className="font-medium text-lg">{house.name}</h3>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     ))}
