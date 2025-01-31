@@ -59,7 +59,7 @@ const FilterBar = ({
                             placeholder="Buscar lociones..."
                             value={searchQuery}
                             onChange={handleSearchChange}
-                            className="w-full h-8 ml-2 outline-none text-sm text-gray-600 placeholder-gray-400 bg-white px-3 py-2 rounded-md"
+                            className="w-full h-8 ml-2 outline-none text-base text-gray-600 placeholder-gray-400 bg-white px-3 py-2 rounded-md"
                         />
                     </div>
                 </div>
