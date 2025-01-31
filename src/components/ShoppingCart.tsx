@@ -1,10 +1,14 @@
 "use client";
 
+import { useAuth } from '@/context/authContext';
 import { formatToCOP } from '@/handlers/FormatToCop';
-import { OrderItem } from '@/types/account';
+import { OrderDto, OrderItem } from '@/types/account';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
+import CardList, { CardData } from './CardList';
+import AddCardForm from './CardForm';
+import axios from 'axios';
 
 interface ShoppingCartProps {
     items?: OrderItem[];
@@ -12,14 +16,143 @@ interface ShoppingCartProps {
     onRemoveItem?: (itemId: string) => void;
 }
 
+export interface cardHolderId {
+    type: 'cc' | 'ce';
+    number: string;
+}
+
 const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCartProps) => {
     const cartItems = Array.isArray(items) ? items : [];
+    const { user } = useAuth();
+    const [cards, setCards] = useState<CardData[]>([]);
+    const [selectedCard, setSelectedCard] = useState<string | null>(null);
+    const [openFormNewCard, setOpenFormNewCard] = useState(false);
+    const [isPayInDoor, setIsPayInDoor] = useState(false)
+
+    useEffect(() => {
+        const cardsSaved = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/accounts/${user?.id}/cards`,
+                )
+                console.log(response)
+                if (response.data.success === false) throw new Error(response.data.error);
+                setCards(Array.isArray(response.data.data) ? response.data.data : []);
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.log(error.message)
+                }
+            }
+        }
+
+        cardsSaved()
+    }, [user?.id])
 
     // Calculate subtotal
     const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
     const insurance = 24.99;
     const total = subtotal + insurance;
+
+    const handleOpenForm = () => setOpenFormNewCard(!openFormNewCard);
+    const handleIsPayInDoor = () => setIsPayInDoor(!isPayInDoor);
+
+    const handleSelectCard = (cardId: string) => {
+        console.log("Card Id: ", cardId)
+        setSelectedCard(cardId);
+        console.log("Tarjeta seleccionada:", cardId);
+    };
+
+    const handleSaveCard = async (
+        cardInfo: {
+            card_number: string;
+            expiration_month: string;
+            expiration_year: string;
+            security_code: string
+        }
+    ) => {
+        try {
+            const {
+                card_number,
+                expiration_month,
+                expiration_year,
+                security_code,
+            } = cardInfo
+
+            const dataPay = {
+                card_number,
+                expiration_month,
+                expiration_year,
+                security_code,
+                cardHolder: {
+                    name: `${user?.name} ${user?.lastName}`,
+                    identification: {
+                        type: user?.type_identity,
+                        number: user?.identity_number,
+                    }
+                }
+            }
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/accounts/${user?.id}/cards`,
+                dataPay
+            );
+
+            if (response.data.success == false) throw new Error(response.data.error);
+
+            console.log("Tarjeta guardada:", cardInfo);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log(error.message);
+            }
+        }
+    };
+
+    const RealizeOrden = async () => {
+        try {
+            if (!isPayInDoor && !selectedCard) throw new Error("Selecciona un metodod de pago");
+
+            const orderData = {
+                accountId: user?.id,
+                items,
+                totalAmount: total,
+            }
+
+            const order = await axios.post(
+                `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/accounts/${user?.id}/orders`,
+                orderData
+            )
+
+            if (order.data.success === false) throw new Error(order.data.error);
+
+            const succOrder: OrderDto = order.data.data;
+            const { id } = succOrder;
+
+            const paymentPayload = {
+                order: {
+                    id,
+                    amount: total,
+                    quantity: cartItems.length,
+                },
+                cardData: { accountId: user?.id, cardId: selectedCard },
+                customerEmail: user?.email,
+            }
+
+            const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}/payment/create`,
+                paymentPayload
+            )
+
+            if (res.data.success === false) throw new Error(res.data.error);
+
+            const successPay = res.data.data;
+            console.log(successPay);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.log(error.message);
+            }
+        }
+    }
 
     return (
         <div className="w-full max-w-4xl mx-auto p-6 space-y-8 mt-20">
@@ -73,7 +206,6 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                                         <FiPlus className="w-5 h-5" />
                                     </button>
                                 </div>
-
                                 <button
                                     onClick={() => onRemoveItem?.(item.id)}
                                     className="p-2 text-red-500 hover:text-red-600"
@@ -83,6 +215,14 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                             </div>
                         </div>
                     ))}
+
+                    <CardList
+                        cards={cards}
+                        onSelectCard={handleSelectCard}
+                        onOpenForm={handleOpenForm}
+                        PayInDoor={handleIsPayInDoor}
+                    />
+                    {openFormNewCard == true && <AddCardForm onSave={handleSaveCard} />}
                 </div>
             )}
 
@@ -110,6 +250,15 @@ const ShoppingCart = ({ items = [], onUpdateQuantity, onRemoveItem }: ShoppingCa
                     </div>
                 </div>
             )}
+
+            <div>
+                <button
+                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                    onClick={RealizeOrden}
+                >
+                    Finalizar Pedido
+                </button>
+            </div>
         </div>
     );
 };

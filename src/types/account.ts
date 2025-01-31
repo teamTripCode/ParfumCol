@@ -53,6 +53,8 @@ export interface AccountDto {
     code_country: string
     city: string
     phone: string
+    identity_number?: string
+    type_identity?: TypeIdentity
     home_address: string
     orders?: OrderDto[]
     cart?: Cart
@@ -75,3 +77,4 @@ export interface JwtPayload {
 
 
 export type orderStatus = "PENDING" | "SHIPPED" | "DELIVERED" | "CANCELED";
+export type TypeIdentity = 'cc' | 'ce';
