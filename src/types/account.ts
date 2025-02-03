@@ -4,9 +4,10 @@ export interface OrderDto {
     id?: string
     account?: AccountDto
     accountId: string
-    items: OrderItem[]
+    items?: OrderItem[]
     totalAmount: number
     status: orderStatus
+    Payment?: Payment;
     createdAt?: Date
     updatedAt?: Date
 }
@@ -14,12 +15,26 @@ export interface OrderDto {
 export interface OrderItem {
     id: string
     orderId: string
-    order: OrderDto
+    order?: OrderDto
     lotionId: string
-    lotion: LotionDto
+    lotion?: LotionDto
     quantity: number
     price: number
     totalPrice: number
+}
+
+export interface Payment {
+    id: string;
+    paymentMethod: PaymentMethod;
+    status: PaymentStatus;
+    amount: number;
+    paymentId?: string
+    cardLast4?: string;
+    cardBrand?: string;
+    order?: OrderDto
+    orderId: string
+    createdAt: Date
+    updatedAt: Date
 }
 
 export interface Cart {
@@ -77,4 +92,6 @@ export interface JwtPayload {
 
 
 export type orderStatus = "PENDING" | "SHIPPED" | "DELIVERED" | "CANCELED";
-export type TypeIdentity = 'cc' | 'ce';
+export type TypeIdentity = 'CC' | 'CE';
+export type PaymentMethod = 'CARD' | 'CASH_ON_DELIVERY';
+export type PaymentStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' | 'CANCELED';

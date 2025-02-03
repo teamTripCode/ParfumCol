@@ -1,22 +1,25 @@
-import { useCart } from "@/context/cartContext"
+"use client";
+import { useCart } from "@/context/cartContext";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { TbShoppingCart, TbShoppingCartDollar } from "react-icons/tb"
 
 function CartInNav() {
     const { cartItemsCount } = useCart();
-    const router = useRouter()
-
-    const redirectCart = () => router.push('/cart')
+    const router = useRouter();
 
     return (
-        <div className="grid place-content-center relative">
-            {cartItemsCount > 0 ? (
-                <TbShoppingCartDollar onClick={redirectCart} size={23} className="text-gray-700 cursor-pointer" />
-            ) : (
-                <TbShoppingCart onClick={redirectCart} size={23} className="text-gray-700 cursor-pointer" />
-            )}
+        <div className="relative">
+            <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-600 hover:text-black"
+                onClick={() => router.push("/cart")}
+            >
+                <ShoppingCart className="h-5 w-5" />
+            </Button>
             {cartItemsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs grid place-content-center">
+                <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white rounded-full text-xs flex items-center justify-center animate-pulse">
                     {cartItemsCount}
                 </span>
             )}
@@ -24,4 +27,4 @@ function CartInNav() {
     );
 }
 
-export default CartInNav
+export default CartInNav;

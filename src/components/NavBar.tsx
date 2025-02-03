@@ -1,127 +1,178 @@
 "use client";
-
-import { useState } from 'react';
-import { IconMenu2, IconX } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
-import CartInNav from './cartNav';
-import { TbUserCircle } from 'react-icons/tb';
-import { useAuth } from '@/context/authContext';
-import Image from 'next/image';
-import logoParfum from "@/assets/logo-parfum.png"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+import Image from "next/image";
+import logoParfum from "@/assets/logo-parfum.png";
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+    ShoppingCart,
+    Menu,
+    User,
+    Heart,
+    Settings,
+    X,
+    LogOut,
+    LogIn
+} from "lucide-react";
+import CartInNav from "./cartNav";
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter();
     const { user } = useAuth();
 
+    const NavLinks = [
+        { label: "Colecciones", path: "/catalogo", icon: <Heart className="mr-2 h-4 w-4" /> },
+        { label: "Casas de Perfume", path: "/casas", icon: <Settings className="mr-2 h-4 w-4" /> },
+        { label: "Contacto", path: "/contacts", icon: null }
+    ];
+
+    const renderNavLinks = (isMobile = false) => (
+        <>
+            {NavLinks.map((link) => (
+                <Button
+                    key={link.path}
+                    variant="ghost"
+                    onClick={() => {
+                        if (isMobile) setIsMenuOpen(false);
+                        router.push(link.path);
+                    }}
+                    className="w-full justify-start text-gray-600 hover:text-black transition-colors duration-300"
+                >
+                    {link.icon}
+                    {link.label}
+                </Button>
+            ))}
+        </>
+    );
+
     return (
-        <nav className="fixed top-0 left-0 w-full bg-white bg-opacity-80 backdrop-blur-lg shadow-md z-50">
-            <div className="flex flex-row items-center px-[5%] py-3">
-                {/* Left Section (hidden on small screens) */}
-                <div className="hidden md:flex items-center justify-start w-1/3">
-                    <div className="flex flex-row gap-5">
-                        <p
-                            className="cursor-pointer text-lg px-2 py-1 hover:bg-gray-200 border border-transparent hover:border-gray-300 rounded-md"
-                            onClick={() => router.push('/catalogo')}
-                        >
-                            Catálogo
-                        </p>
-
-                        <p
-                            className="cursor-pointer text-lg px-2 py-1 hover:bg-gray-200 border border-transparent hover:border-gray-300 rounded-md"
-                            onClick={() => router.push('/casas')}
-                        >
-                            Casas
-                        </p>
-
-                        <p
-                            className="cursor-pointer text-lg px-2 py-1 hover:bg-gray-200 border border-transparent hover:border-gray-300 rounded-md"
-                            onClick={() => router.push('/contacts')}
-                        >
-                            Contacto
-                        </p>
+        <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-light border-b border-gray-100 z-50">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center justify-between px-[5%] py-4">
+                <div className="flex items-center gap-6">
+                    <div
+                        className="flex items-center gap-2 cursor-pointer"
+                        onClick={() => router.push("/")}
+                    >
+                        <Image width={32} height={32} src={logoParfum} alt="Parfum Colombia Logo" className="rounded-full" />
+                        <h3 className="text-2xl font-serif font-light tracking-wider text-gray-800">PARFUM</h3>
                     </div>
-                </div>
-
-                {/* Center Section */}
-                <div className="flex md:justify-center justify-start w-full md:w-1/3">
-                    <div className="flex flex-row gap-1 items-center">
-                        <div className="grid place-content-center">
-                            <Image width={20} height={20} src={logoParfum} alt="logo" />
-                        </div>
-                        <h3
-                            onClick={() => router.push('/')}
-                            className="pt-1 text-xl md:text-2xl font-bold text-gray-700 cursor-pointer"
-                        >
-                            PARFUM COLOMBIA
-                        </h3>
+                    <div className="flex gap-4">
+                        {renderNavLinks()}
                     </div>
                 </div>
 
                 {/* Right Section */}
-                <div className="flex items-center justify-end w-auto md:w-1/3 gap-5">
-                    <div className="flex flex-row gap-3 items-center">
-                        {/* Cart */}
-                        <CartInNav />
-
-                        {/* Profile (hidden on small screens) */}
-                        <div
-                            className="hidden md:flex flex-row gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-md cursor-pointer border border-gray-300 items-center"
-                            onClick={() => router.push('/profile')}
-                        >
-                            <TbUserCircle size={20} className="text-gray-700" />
-                            <p>{user ? user.name : "Tu cuenta"}</p>
-                        </div>
-                    </div>
-
-                    {/* Mobile Menu Icon */}
-                    <div
-                        className="md:hidden grid place-content-center cursor-pointer"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    >
-                        {isMenuOpen ? (
-                            <IconX className="text-gray-700" />
-                        ) : (
-                            <IconMenu2 className="text-gray-700" />
-                        )}
-                    </div>
+                <div className="flex items-center gap-4">
+                    <CartInNav />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="rounded-full">
+                                <User className="mr-2 h-4 w-4" />
+                                {user ? user.name : "Cuenta"}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            {user ? (
+                                <>
+                                    <DropdownMenuItem onSelect={() => router.push("/profile")}>
+                                        <User className="mr-2 h-4 w-4" />
+                                        Perfil
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onSelect={() => {/* logout logic */ }}>
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        Cerrar Sesión
+                                    </DropdownMenuItem>
+                                </>
+                            ) : (
+                                <DropdownMenuItem onSelect={() => router.push("/login")}>
+                                    <LogIn className="mr-2 h-4 w-4" />
+                                    Iniciar Sesión
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden">
-                    <ul className="flex flex-col items-center gap-4 py-4">
-                        <li
-                            className="cursor-pointer"
-                            onClick={() => {
-                                setIsMenuOpen(false);
-                                router.push('/catalogo');
-                            }}
-                        >
-                            Catálogo
-                        </li>
-                        <li
-                            className="cursor-pointer"
-                            onClick={() => {
-                                setIsMenuOpen(false);
-                                router.push('/casas');
-                            }}
-                        >
-                            Casas
-                        </li>
-                        <li
-                            className="cursor-pointer"
-                            onClick={() => {
-                                setIsMenuOpen(false);
-                                router.push('/contacts');
-                            }}
-                        >
-                            Contacto
-                        </li>
-                    </ul>
+            {/* Mobile Navigation */}
+            <div className="md:hidden flex items-center justify-between px-[5%] py-4">
+                <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => router.push("/")}
+                >
+                    <Image width={30} height={30} src={logoParfum} alt="Parfum Colombia Logo" className="rounded-full" />
+                    <h3 className="text-2xl font-serif font-light tracking-wider text-gray-800 pt-2">PARFUM</h3>
                 </div>
-            )}
+
+                <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            {isMenuOpen ? <X className="text-gray-800" /> : <Menu className="text-gray-800" />}
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="top" className="bg-white/95 p-5">
+                        <div className="flex flex-col p-4 justify-start">
+                            <Image width={40} height={40} src={logoParfum} alt="Parfum Colombia Logo" className="rounded-full mb-2" />
+                            {/* <h3 className="text-xl font-serif font-light tracking-wider text-gray-800">PARFUM</h3> */}
+                        </div>
+                        <div className="mt-4 space-y-4">
+                            {renderNavLinks(true)}
+                            <Button
+                                variant="ghost"
+                                onClick={() => router.push("/cart")}
+                                className="w-full justify-start"
+                            >
+                                <ShoppingCart className="mr-2 h-4 w-4" />
+                                Carrito
+                            </Button>
+
+                            <div className="border-t border-gray-200 pt-3">
+                                {user ? (
+                                    <>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => router.push("/profile")}
+                                            className="w-full justify-start"
+                                        >
+                                            <User className="mr-2 h-4 w-4" />
+                                            Perfil
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => {/* logout logic */ }}
+                                            className="w-full justify-start text-red-600"
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            Cerrar Sesión
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => router.push("/login")}
+                                        className="w-full justify-start text-green-600"
+                                    >
+                                        <LogIn className="mr-2 h-4 w-4" />
+                                        Iniciar Sesión
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
         </nav>
     );
 }
