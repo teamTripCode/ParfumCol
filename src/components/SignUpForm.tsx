@@ -1,6 +1,10 @@
-"use client"
+"use client";
 
-import Select from "react-select";
+import React from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { cn } from "@/lib/utils";
+import { FaGithub, FaGoogle, FaStar } from "react-icons/fa";
 
 const SignUpForm: React.FC<{
     isLoading: boolean;
@@ -35,136 +39,77 @@ const SignUpForm: React.FC<{
     setIsSignin,
     city,
 }) => (
-        <section className="min-h-dvh dark:bg-gray-900 md:mt-20 mt-20">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-lg font-bold leading-tight tracking-tight text-gray-600 md:text-2xl dark:text-white">
-                            Crea una cuenta
-                        </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
-                            <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Correo Electrónico
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="input"
-                                    placeholder="name@company.com"
-                                />
+        <div className="flex justify-center items-center min-h-screen mt-28 mb-10">
+            <div className="w-[90%] md:w-[50%] mx-auto p-6 md:p-10 bg-white shadow-lg rounded-lg dark:bg-black">
+                <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">Bienvenido</h2>
+                <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+                    Regístrate para acceder a la plataforma.
+                </p>
+
+                <form className="my-8" onSubmit={(e) => e.preventDefault()}>
+                    <LabelInputContainer>
+                        <Label htmlFor="names">Nombres</Label>
+                        <Input id="names" placeholder="Ej. Juan" type="text" onChange={(e) => setNames(e.target.value)} />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                        <Label htmlFor="lastNames">Apellidos</Label>
+                        <Input id="lastNames" placeholder="Ej. Pérez" type="text" onChange={(e) => setLastNames(e.target.value)} />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                        <Label htmlFor="email">Correo Electrónico</Label>
+                        <Input id="email" placeholder="name@company.com" type="email" onChange={(e) => setEmail(e.target.value)} />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                        <Label htmlFor="password">Contraseña</Label>
+                        <Input id="password" placeholder="••••••••" type="password" onChange={(e) => setPassword(e.target.value)} />
+                    </LabelInputContainer>
+                    <button
+                        type="button"
+                        onClick={handleIsRegister}
+                        className={`w-full ${isLoading ? "btn-disabled" : "btn-primary"} mb-5 mt-5 p-3 bg-gray-200 rounded-md`}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Registrando..." : "Registrarse"}
+                    </button>
+
+                    <div>
+                        <div>
+                            <div className="flex items-center my-4">
+                                <div className="flex-1 h-px bg-gray-400"></div>
+                                <span className="px-3 text-sm text-neutral-600">También puedes usar</span>
+                                <div className="flex-1 h-px bg-gray-400"></div>
                             </div>
-                            <div>
-                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Contraseña
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="input"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="names" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Nombres
-                                </label>
-                                <input
-                                    type="text"
-                                    id="names"
-                                    onChange={(e) => setNames(e.target.value)}
-                                    className="input"
-                                    placeholder="Ej. Juan"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="lastNames" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Apellidos
-                                </label>
-                                <input
-                                    type="text"
-                                    id="lastNames"
-                                    onChange={(e) => setLastNames(e.target.value)}
-                                    className="input"
-                                    placeholder="Ej. Pérez"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Teléfono
-                                </label>
-                                <input
-                                    type="text"
-                                    id="phone"
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className="input"
-                                    placeholder="Ej. 123456789"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="addressOfResidence" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Dirección de Residencia
-                                </label>
-                                <input
-                                    type="text"
-                                    id="addressOfResidence"
-                                    onChange={(e) => setAddressOfResidence(e.target.value)}
-                                    className="input"
-                                    placeholder="Ej. Calle 123 #45-67"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">País</label>
-                                <Select
-                                    options={[
-                                        { label: "Colombia", value: "Colombia" },
-                                        { label: "México", value: "México" },
-                                        // Agrega más opciones aquí
-                                    ]}
-                                    value={country}
-                                    onChange={(selected) => setCountry(selected)}
-                                    placeholder="Seleccione un país"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
-                                <Select
-                                    options={cities}
-                                    value={city}
-                                    onChange={(selected) => setCity(selected)}
-                                    placeholder="Seleccione una ciudad"
-                                    isDisabled={!country} // Deshabilitado hasta que se seleccione un país
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Código de país: {callingCode}
-                                </label>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleIsRegister}
-                                className={`w-full ${isLoading ? "btn-disabled" : "btn-primary"}`}
-                                disabled={isLoading}
-                            >
-                                {isLoading ? "Registrando..." : "Registrarse"}
-                            </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                ¿Ya tienes una cuenta?{" "}
-                                <span
-                                    onClick={() => setIsSignin(true)}
-                                    className="cursor-pointer font-medium text-blue-600 hover:underline"
-                                >
-                                    Inicia sesión
-                                </span>
-                            </p>
-                        </form>
+                        </div>
                     </div>
-                </div>
+
+                    <div className="flex flex-row gap-5 justify-between mt-6">
+                        <AuthButton icon={<FaGithub />} text="GitHub" />
+                        <AuthButton icon={<FaGoogle />} text="Google" />
+                    </div>
+
+                    <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
+                        ¿Ya tienes cuenta?
+                        <button
+                            className="text-blue-600 dark:text-blue-400 ml-1 hover:underline"
+                            onClick={() => setIsSignin(true)}
+                        >
+                            Inicia sesión aquí
+                        </button>
+                    </p>
+                </form>
             </div>
-        </section>
+        </div>
     );
+
+const AuthButton = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
+    <button className="flex items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
+        {icon}
+        <span className="ml-2 text-neutral-700 dark:text-neutral-300 text-sm">{text}</span>
+    </button>
+);
+
+const LabelInputContainer = ({ children }: { children: React.ReactNode }) => (
+    <div className="flex flex-col space-y-2 w-full mb-4">{children}</div>
+);
 
 export default SignUpForm;

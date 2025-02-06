@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { FaImage } from "react-icons/fa";
 import { GiSharpCrown } from "react-icons/gi";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
+import { SparklesText } from "./ui/magicHeroHouse";
 
 interface House {
     id: number;
@@ -64,7 +65,7 @@ const PerfumeHousesGrid: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20">
 
-            <div className="grid place-content-center mb-24">
+            {/* <div className="grid place-content-center mb-24">
                 <div className="flex flex-row md:gap-7 gap-3 bg-gray-100 px-5 py-3 rounded-3xl">
                     <div className="grid place-content-center bg-gray-300 p-2 rounded-full drop-shadow-md border border-gray-300">
                         <GiSharpCrown size={20} className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
@@ -74,6 +75,10 @@ const PerfumeHousesGrid: React.FC = () => {
                         Explora las casas de perfumes que más te gustan.
                     </h2>
                 </div>
+            </div> */}
+
+            <div className="grid place-content-center mb-16">
+                <SparklesText text="¡Descubre tu fragancia ideal!" className="text-gray-600 drop-shadow-lg" />
             </div>
 
             {/* Estado de carga */}
@@ -103,17 +108,13 @@ const PerfumeHousesGrid: React.FC = () => {
                                             src={house.logo}
                                             alt={house.name}
                                             className="w-32 h-32 object-contain transform transition-transform 
-                                                     duration-300 hover:scale-110"
+                                                     duration-300 hover:scale-110 drop-shadow-lg"
                                         />
                                     ) : (
                                         <FaImage className="w-16 h-16 text-gray-300 transition-colors 
                                                           duration-300 group-hover:text-gray-400" />
                                     )}
                                 </div>
-                                {/* <h3 className="text-xl font-light text-gray-700 text-center transition-colors 
-                                             duration-300 group-hover:text-gray-900">
-                                    {house.name}
-                                </h3> */}
                             </div>
                         </div>
                     ))}

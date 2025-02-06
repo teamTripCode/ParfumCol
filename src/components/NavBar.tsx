@@ -96,7 +96,7 @@ function NavBar() {
                                     </DropdownMenuItem>
                                 </>
                             ) : (
-                                <DropdownMenuItem onSelect={() => router.push("/login")}>
+                                <DropdownMenuItem onSelect={() => router.push("/auth")}>
                                     <LogIn className="mr-2 h-4 w-4" />
                                     Iniciar Sesión
                                 </DropdownMenuItem>
@@ -161,7 +161,7 @@ function NavBar() {
                                 ) : (
                                     <Button
                                         variant="ghost"
-                                        onClick={() => router.push("/login")}
+                                        onClick={() => router.push("/auth")}
                                         className="w-full justify-start text-green-600"
                                     >
                                         <LogIn className="mr-2 h-4 w-4" />
