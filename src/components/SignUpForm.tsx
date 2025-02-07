@@ -3,8 +3,7 @@
 import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { cn } from "@/lib/utils";
-import { FaGithub, FaGoogle, FaStar } from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const SignUpForm: React.FC<{
     isLoading: boolean;
@@ -29,15 +28,8 @@ const SignUpForm: React.FC<{
     setNames,
     setLastNames,
     setPhone,
-    setAddressOfResidence,
-    setCountry,
-    setCity,
-    cities,
-    country,
-    callingCode,
     handleIsRegister,
     setIsSignin,
-    city,
 }) => (
         <div className="flex justify-center items-center min-h-screen mt-28 mb-10">
             <div className="w-[90%] md:w-[50%] mx-auto p-6 md:p-10 bg-white shadow-lg rounded-lg dark:bg-black">
@@ -49,19 +41,23 @@ const SignUpForm: React.FC<{
                 <form className="my-8" onSubmit={(e) => e.preventDefault()}>
                     <LabelInputContainer>
                         <Label htmlFor="names">Nombres</Label>
-                        <Input id="names" placeholder="Ej. Juan" type="text" onChange={(e) => setNames(e.target.value)} />
+                        <Input id="names" className="text-base" placeholder="" type="text" onChange={(e) => setNames(e.target.value)} />
                     </LabelInputContainer>
                     <LabelInputContainer>
                         <Label htmlFor="lastNames">Apellidos</Label>
-                        <Input id="lastNames" placeholder="Ej. Pérez" type="text" onChange={(e) => setLastNames(e.target.value)} />
+                        <Input id="lastNames" className="text-base" placeholder="" type="text" onChange={(e) => setLastNames(e.target.value)} />
                     </LabelInputContainer>
                     <LabelInputContainer>
                         <Label htmlFor="email">Correo Electrónico</Label>
-                        <Input id="email" placeholder="name@company.com" type="email" onChange={(e) => setEmail(e.target.value)} />
+                        <Input id="email" className="text-base" placeholder="" type="email" onChange={(e) => setEmail(e.target.value)} />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                        <Label htmlFor="email">Numero celular</Label>
+                        <Input id="email" className="text-base" placeholder="" type="tel" onChange={(e) => setPhone(e.target.value)} />
                     </LabelInputContainer>
                     <LabelInputContainer>
                         <Label htmlFor="password">Contraseña</Label>
-                        <Input id="password" placeholder="••••••••" type="password" onChange={(e) => setPassword(e.target.value)} />
+                        <Input id="password" className="text-base" placeholder="" type="password" onChange={(e) => setPassword(e.target.value)} />
                     </LabelInputContainer>
                     <button
                         type="button"

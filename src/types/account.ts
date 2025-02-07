@@ -64,13 +64,13 @@ export interface AccountDto {
     lastName: string
     email: string
     password: string
-    country: string
-    code_country: string
-    city: string
+    country?: string
+    code_country?: string
+    city?: string
     phone: string
     identity_number?: string
     type_identity?: TypeIdentity
-    home_address: string
+    home_address?: string
     orders?: OrderDto[]
     cart?: Cart
 }

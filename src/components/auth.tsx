@@ -90,10 +90,6 @@ function AuthComplete() {
                 password: password as string,
                 name: names as string,
                 lastName: lastNames as string,
-                country: country?.value as string,
-                city: city?.value as string,
-                code_country: callingCode as string,
-                home_address: addressOfResidence as string,
                 phone: phone as string
             })
         } catch (error) {

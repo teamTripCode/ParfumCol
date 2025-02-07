@@ -3,6 +3,7 @@
 import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const SignInForm: React.FC<{
   isLoading: boolean;
@@ -40,18 +41,36 @@ const SignInForm: React.FC<{
             <button
               type="button"
               onClick={handleIsLogin}
-              className={`w-full ${isLoading ? "btn-disabled" : "btn-primary"}`}
+              className={`w-full ${isLoading ? "btn-disabled" : "btn-primary"} mb-5 mt-5 p-3 bg-gray-200 rounded-md`}
               disabled={isLoading}
             >
               {isLoading ? "Cargando..." : "Ingresar"}
             </button>
+          </form>
+
+          <div>
+            <div>
+              <div className="flex items-center my-4">
+                <div className="flex-1 h-px bg-gray-400"></div>
+                <span className="px-3 text-sm text-neutral-600">También puedes usar</span>
+                <div className="flex-1 h-px bg-gray-400"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-row gap-5 justify-between mt-6">
+            <AuthButton icon={<FaGithub />} text="GitHub" />
+            <AuthButton icon={<FaGoogle />} text="Google" />
+          </div>
+
+          <div className="grid place-content-center mt-10 mb-5">
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               ¿Aún no tienes cuenta?{" "}
               <span onClick={() => setIsSignin(false)} className="cursor-pointer font-medium text-blue-600 hover:underline">
                 Regístrate
               </span>
             </p>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -59,3 +78,10 @@ const SignInForm: React.FC<{
 );
 
 export default SignInForm;
+
+const AuthButton = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
+  <button className="flex items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
+    {icon}
+    <span className="ml-2 text-neutral-700 dark:text-neutral-300 text-sm">{text}</span>
+  </button>
+);

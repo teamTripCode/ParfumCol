@@ -124,6 +124,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const response = await axios.post<AuthResponse>(`${apiEndpoint}/accounts`, userData);
 
+            // console.log("res register: ", response)
+
             if (response.data.success && response.data.accessToken && response.data.data) {
                 await handleSuccessfulAuth(response.data.accessToken);
             } else {

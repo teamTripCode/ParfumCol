@@ -8,7 +8,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
-    const radius = 100; // Cambia esto para ajustar el radio del efecto hover
+    const radius = 100;
     const [visible, setVisible] = React.useState(false);
 
     // Variables de movimiento del mouse
