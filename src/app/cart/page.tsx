@@ -10,7 +10,6 @@ import { useEffect, useState } from "react"
 
 function Cart() {
     const [items, setItems] = useState<OrderItem[] | null>(null)
-    const [bannerVisible, setBannerVisible] = useState(true);
 
     const { user } = useAuth()
 
@@ -45,8 +44,7 @@ function Cart() {
 
     return (
         <>
-            <DevelopmentBanner onClose={() => setBannerVisible(false)} />
-            <NavBar bannerVisible={bannerVisible} />
+            <NavBar />
             <ShoppingCart items={items as OrderItem[]} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} />
         </>
     )
