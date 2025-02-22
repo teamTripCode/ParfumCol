@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
@@ -25,7 +26,11 @@ import {
 } from "lucide-react";
 import CartInNav from "./cartNav";
 
-function NavBar() {
+interface NavBarProps {
+    bannerVisible: boolean;
+}
+
+function NavBar({ bannerVisible }: NavBarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter();
     const { user } = useAuth();
@@ -56,7 +61,8 @@ function NavBar() {
     );
 
     return (
-        <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-light border-b border-gray-100 z-50">
+        <nav className={`fixed left-0 w-full bg-white/80 backdrop-blur-md shadow-light border-b border-gray-100 z-40 transition-all duration-300 ${bannerVisible ? "top-12 sm:top-10" : "top-0"
+            }`}>
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center justify-between px-[5%] py-4">
                 <div className="flex items-center gap-6">
