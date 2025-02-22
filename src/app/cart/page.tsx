@@ -2,6 +2,7 @@
 
 import NavBar from "@/components/NavBar"
 import ShoppingCart from "@/components/ShoppingCart"
+import DevelopmentBanner from "@/components/TopAlert"
 import { useAuth } from "@/context/authContext"
 import { OrderItem } from "@/types/account"
 import axios from "axios"
@@ -9,6 +10,8 @@ import { useEffect, useState } from "react"
 
 function Cart() {
     const [items, setItems] = useState<OrderItem[] | null>(null)
+    const [bannerVisible, setBannerVisible] = useState(true);
+
     const { user } = useAuth()
 
     // console.log("userContext: ", user)
@@ -42,7 +45,8 @@ function Cart() {
 
     return (
         <>
-            <NavBar />
+            <DevelopmentBanner onClose={() => setBannerVisible(false)} />
+            <NavBar bannerVisible={bannerVisible} />
             <ShoppingCart items={items as OrderItem[]} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} />
         </>
     )
