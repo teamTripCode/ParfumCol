@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react";
 import CatalogPreview from "@/components/AllLotions";
 import BlockchainDeliverySection from "@/components/Delivery";
 import Footer from "@/components/footer";

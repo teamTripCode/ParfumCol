@@ -18,7 +18,7 @@ export default function DevelopmentBanner({ onClose }: DevelopmentBannerProps) {
 
     return (
         <div className="fixed top-0 left-0 w-full bg-blue-50 text-black text-center p-2 font-semibold flex items-center justify-between z-50 px-4 md:px-6">
-            <span className="text-xs font-light text-center md:text-sm text-gray-500">
+            <span className="text-xs font-light text-center md:text-sm text-gray-500 grow">
                 🚧 Este sitio web está en fase de desarrollo. Es posible que algunas funciones no funcionen como se espera.
             </span>
             <button

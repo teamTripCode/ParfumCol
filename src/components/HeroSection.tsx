@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 function HeroSection() {
     const router = useRouter()
     return (
-        <div className="pt-44 px-[5%] mb-5">
+        <div className="pt-32 px-[5%] mb-5">
             <div>
                 <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
                     Descubre la Esencia del Lujo a tu Alcance

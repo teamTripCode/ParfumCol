@@ -8,28 +8,17 @@ import {
 import { PiArrowUpRightBold } from "react-icons/pi";
 import Sellers from './Salles';
 import CoinStatus from './CoinWarns';
+import ArticleCart from './articleCart';
+import { url } from 'inspector';
 
 interface DeliveryStepProps {
     number: number;
     title: string;
     description: string;
     status: string;
+    url: string
     Icon: React.ComponentType<{ className?: string }>;
 }
-
-const DeliveryStep = ({ number, title, description, status, Icon }: DeliveryStepProps) => (
-    <div className="p-6 bg-white shadow-lg rounded-lg relative">
-        <span className="absolute -top-3 -left-3 w-8 h-8 flex items-center justify-center bg-black text-white rounded-full">
-            {number}
-        </span>
-        <div className="mb-4">
-            <Icon className="w-8 h-8 text-gray-800" />
-        </div>
-        <h3 className="text-xl font-serif mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm mb-3">{description}</p>
-        <p className="text-orange-300 text-sm">{status}</p>
-    </div>
-);
 
 const BlockchainDeliverySection = () => {
     const deliverySteps = [
@@ -45,14 +34,16 @@ const BlockchainDeliverySection = () => {
             Icon: BsShieldCheck,
             title: "Transparencia Total",
             description: "Consulta tu historial de compras sin intermediarios ni riesgos de fraude.",
-            status: "Autenticidad Garantizada"
+            status: "Autenticidad Garantizada",
+            url: ""
         },
         {
             number: 3,
             Icon: BsTruck,
             title: "Recompensas Exclusivas",
             description: "Acumula ParfumCoins con cada compra y úsalos para obtener descuentos o usarlos para comprar.",
-            status: "Seguimiento 24/7"
+            status: "Seguimiento 24/7",
+            url: "",
         },
     ];
 
@@ -74,18 +65,7 @@ const BlockchainDeliverySection = () => {
 
                 <div className='flex flex-wrap gap-6'>
                     {deliverySteps.map((infoCard) => (
-                        <div key={infoCard.number} className='border border-gray-300 rounded-xl basis-[300px] grow'>
-                            <div className='p-5'>
-                                <h3 className='font-extrabold'>{infoCard.title}</h3>
-                                <p className='text-sm'>{infoCard.description}</p>
-                            </div>
-                            <div className='flex flex-row justify-between p-5 border border-t-gray-300'>
-                                <p className='text-sm'>Leer Articulo</p>
-                                <div className='grid place-content-center'>
-                                    <PiArrowUpRightBold size={16} />
-                                </div>
-                            </div>
-                        </div>
+                        <ArticleCart infoCard={infoCard as DeliveryStepProps} />
                     ))}
                 </div>
             </div>

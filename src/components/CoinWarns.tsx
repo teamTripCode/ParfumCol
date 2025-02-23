@@ -40,9 +40,10 @@ const CoinStatus = () => {
         const scene = new THREE.Scene();
         scene.background = null;
 
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        camera.position.z = 5;
-        camera.position.y = 2;
+        // Ajustamos la cámara para mantener la vista actual
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.set(0, 4, 5);
+        camera.lookAt(0, -1, 0);
 
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -51,51 +52,59 @@ const CoinStatus = () => {
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setClearColor(0x000000, 0);
 
-        // Append renderer to the DOM
         mountRef.current.appendChild(renderer.domElement);
 
-        // Lighting
+        // Iluminación
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        directionalLight.position.set(5, 5, 5);
+        directionalLight.position.set(2, 4, 2);
         scene.add(directionalLight);
 
-        const pointLight = new THREE.PointLight(0xffffff, 1);
-        pointLight.position.set(-5, -5, 3);
-        scene.add(pointLight);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        fillLight.position.set(-2, 4, 2);
+        scene.add(fillLight);
 
-        // Controls
+        // Controles
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableZoom = false;
         controls.enablePan = false;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 2;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minPolarAngle = Math.PI / 3;
+        controls.maxPolarAngle = Math.PI / 3;
 
-        // GLTF loader
         const loader = new GLTFLoader();
         loader.load(
-            '/models/LEO.glb',
+            '/models/base.glb',
             (gltf) => {
                 const model = gltf.scene;
 
-                // Center and scale the model
+                // Centrar el modelo
                 const box = new THREE.Box3().setFromObject(model);
                 const center = box.getCenter(new THREE.Vector3());
                 model.position.sub(center);
 
+                // Ajustamos la posición vertical del modelo más abajo
+                model.position.y = -2.5; // Aumentamos el valor negativo para bajar más el modelo
+
+                // Ajustar escala
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 6 / maxDim;
+                const scale = 3.5 / maxDim;
                 model.scale.multiplyScalar(scale);
 
-                model.rotation.x = Math.PI / 6;
-                scene.add(model);
+                // Rotación inicial
+                model.rotation.x = -Math.PI / 6;
+                model.rotation.y = 0;
+                model.rotation.z = 0;
 
+                scene.add(model);
                 setModelLoaded(true);
 
-                // Animation loop
                 const animate = () => {
                     requestAnimationFrame(animate);
                     controls.update();
@@ -113,29 +122,23 @@ const CoinStatus = () => {
             }
         );
 
-        // Handle window resize
         const handleResize = () => {
             if (mountRef.current) {
                 const width = mountRef.current.clientWidth;
                 const height = mountRef.current.clientHeight;
 
-                // Update renderer size and camera aspect ratio
                 renderer.setSize(width, height);
                 camera.aspect = width / height;
                 camera.updateProjectionMatrix();
 
-                // Ensure the canvas style matches the container size
                 renderer.domElement.style.width = `${width}px`;
                 renderer.domElement.style.height = `${height}px`;
             }
         };
 
-        // Initial size setup
         handleResize();
-
         window.addEventListener('resize', handleResize);
 
-        // Cleanup
         return () => {
             window.removeEventListener('resize', handleResize);
             if (mountRef.current) {

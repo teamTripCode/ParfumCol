@@ -18,14 +18,18 @@ import {
     ShoppingCart,
     Menu,
     User,
-    Heart,
     Settings,
     X,
     LogOut,
     LogIn
 } from "lucide-react";
+
+
 import CartInNav from "./cartNav";
 import DevelopmentBanner from "@/components/TopAlert";
+import { FiGrid } from "react-icons/fi";
+import { RiBuildingLine, RiMessage2Line } from "react-icons/ri";
+import { SiBlockchaindotcom } from "react-icons/si"
 
 function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +38,10 @@ function NavBar() {
     const { user } = useAuth();
 
     const NavLinks = [
-        { label: "Colecciones", path: "/catalogo", icon: <Heart className="mr-2 h-4 w-4" /> },
-        { label: "Casas de Perfume", path: "/casas", icon: <Settings className="mr-2 h-4 w-4" /> },
-        { label: "Contacto", path: "/contacts", icon: null }
+        { label: "Colecciones", path: "/catalogo", icon: <FiGrid className="mr-1 h-2 w-4" /> },
+        { label: "Casas de Perfume", path: "/casas", icon: <RiBuildingLine className="mr-1 h-2 w-4" /> },
+        { label: "Contacto", path: "/contacts", icon: <RiMessage2Line className="mr-1 h-2 w-4" /> },
+        { label: "Criptomoneda", path: "/contacts", icon: <SiBlockchaindotcom className="mr-1 h-2 w-4" /> }
     ];
 
     const renderNavLinks = (isMobile = false) => (
@@ -49,7 +54,7 @@ function NavBar() {
                         if (isMobile) setIsMenuOpen(false);
                         router.push(link.path);
                     }}
-                    className="w-full justify-start text-gray-600 hover:text-black transition-colors duration-300"
+                    className="w-full justify-start text-gray-600 hover:text-black transition-colors duration-300 gap-1"
                 >
                     {link.icon}
                     {link.label}
@@ -64,13 +69,15 @@ function NavBar() {
             <nav className={`fixed left-0 w-full bg-white/80 backdrop-blur-md shadow-light border-b border-gray-100 z-40 transition-all duration-300 ${bannerVisible ? "top-12 sm:top-10" : "top-0"}`}>
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center justify-between px-[5%] py-4">
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-8">
                         <div
                             className="flex items-center gap-2 cursor-pointer"
                             onClick={() => router.push("/")}
                         >
-                            <Image width={32} height={32} src={logoParfum} alt="Parfum Colombia Logo" className="rounded-full" />
-                            <h3 className="text-2xl font-serif font-light tracking-wider text-gray-800">PARFUM</h3>
+                            <div className="flex flex-col">
+                                <h3 className="text-1xl font-serif font-light tracking-wider text-gray-800 pt-1 drop-shadow-lg">PARFUMCOL</h3>
+                                <p className="text-[9px] font-thin">Más que un aroma, una inversion</p>
+                            </div>
                         </div>
                         <div className="flex gap-4">
                             {renderNavLinks()}
@@ -117,8 +124,10 @@ function NavBar() {
                         className="flex items-center gap-2 cursor-pointer"
                         onClick={() => router.push("/")}
                     >
-                        <Image width={30} height={30} src={logoParfum} alt="Parfum Colombia Logo" className="rounded-full" />
-                        <h3 className="text-2xl font-serif font-light tracking-wider text-gray-800 pt-2">PARFUM</h3>
+                        <div className="flex flex-col">
+                        <h3 className="text-1xl font-serif font-light tracking-wider text-gray-800 pt-1">PARFUMCOL</h3>
+                        <p className="text-[9px] font-thin text-gray-800 drop-shadow-lg">Más que un aroma, una inversion</p>
+                        </div>
                     </div>
 
                     <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
