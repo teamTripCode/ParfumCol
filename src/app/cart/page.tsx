@@ -2,7 +2,6 @@
 
 import NavBar from "@/components/NavBar"
 import ShoppingCart from "@/components/ShoppingCart"
-import DevelopmentBanner from "@/components/TopAlert"
 import { useAuth } from "@/context/authContext"
 import { OrderItem } from "@/types/account"
 import axios from "axios"
@@ -12,8 +11,6 @@ function Cart() {
     const [items, setItems] = useState<OrderItem[] | null>(null)
 
     const { user } = useAuth()
-
-    // console.log("userContext: ", user)
 
     const handleUpdateQuantity = (itemId: string, newQuantity: number) => {
         console.log(itemId, newQuantity)

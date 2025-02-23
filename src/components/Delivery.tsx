@@ -5,11 +5,9 @@ import {
     BsTruck,
     BsCheckCircle
 } from 'react-icons/bs';
-import { PiArrowUpRightBold } from "react-icons/pi";
 import Sellers from './Salles';
 import CoinStatus from './CoinWarns';
 import ArticleCart from './articleCart';
-import { url } from 'inspector';
 
 interface DeliveryStepProps {
     number: number;
@@ -64,8 +62,8 @@ const BlockchainDeliverySection = () => {
                 </div>
 
                 <div className='flex flex-wrap gap-6'>
-                    {deliverySteps.map((infoCard) => (
-                        <ArticleCart infoCard={infoCard as DeliveryStepProps} />
+                    {deliverySteps.map((infoCard, index) => (
+                        <ArticleCart infoCard={infoCard as DeliveryStepProps} key={index} />
                     ))}
                 </div>
             </div>
